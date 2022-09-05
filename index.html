@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <title>Sirius Javascript Simulator</title>
+    <style>
+        th {
+            text-align: left;
+        }
+    </style>
+    <script type="text/javascript" src="./js/config.js"></script>
+    <script type="text/javascript" src="./js/initial-balancing.js"></script>
+    <script type="text/javascript" src="./js/simulator-functions.js"></script>
+    
+</head>
+<body>
+    <script type="text/javascript">
+        
+        let tempIdKey;
+        let tempToken;
+        let newUserCreated;
+        let token;
+        let initialBalancingCreated;
+        let latestBalancingRetrieved;
+        let latestInventoryRetrieved;
+        let settlementCreated;
+        let buildingsCreated = new Array();
+        let productionCollected = new Array();
+
+        //testFunctions();
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            
+            initialize();
+
+        });
+
+        async function testFunctions(){
+            /*
+            tempIdKey = readTempIdKeyFromConfig();
+
+            console.log('temp id: ' + tempIdKey.appId);
+            console.log('temp id: ' + tempIdKey.appKey);
+
+            tempToken = await login(tempIdKey);
+
+            bearerToken = tempToken.accessToken;
+
+            newUserCreated = await register();
+
+            console.log('id: ' + newUserCreated.id);
+            console.log('sirius id: ' + newUserCreated.siriusId);
+            console.log('sirius key: '+ newUserCreated.siriusKey);
+            console.log('username: '+ newUserCreated.username);
+            
+            let userForLogin = { 
+                "siriusId": newUserCreated.siriusId, 
+                "siriusKey": newUserCreated.siriusKey,
+                "appId": tempIdKey.appId,
+                "appKey": tempIdKey.appKey
+                
+            }; 
+
+            /*let userForLogin = { 
+                "siriusId": "b12pobj7mm", 
+                "siriusKey": "2iej37x528m0000000000",
+                "appId": tempIdKey.appId,
+                "appKey": tempIdKey.appKey
+                
+            };*/
+            
+            token = await login(userForLogin);
+            bearerToken = token.accessToken;
+
+            console.log('token: ' + token);
+            /*
+            initialBalancingCreated = await initializeBalancing();
+
+            console.log('initial balancing created ' + initialBalancingCreated.id);
+            
+            latestBalancingRetrieved = await latestBalancing();
+            console.log('Latest balancing retrieved: ' + latestBalancingRetrieved.id);
+
+            latestInventoryRetrieved = await latestUserInventory(newUserCreated.id);
+            console.log('retrieved inventory...');
+            console.log(latestInventoryRetrieved);
+
+            settlementCreated = await createSettlement();
+            console.log('new settlement created...');
+            console.log(settlementCreated); */
+        }
+
+        const registerHandler = async (...args) => {
+            console.log('registerHandler is called');
+
+            tempIdKey = readTempIdKeyFromConfig();
+            tempToken = await login(tempIdKey);
+            bearerToken = tempToken.accessToken;
+
+            newUserCreated = await register();
+            
+            var elem = document.querySelector('#user-info');
+
+            // Get HTML content
+            var html = elem.innerHTML;
+            elem.innerHTML = 'New user with username ' +  newUserCreated.username + ' registered';
+ 
+        }
+
+        function initialize(){
+            hideBuildingButtons();
+            disableBuildingButtons();
+            hideInventoryHeader();
+            loadDefaultUser();
+        }
+
+        function loadDefaultUser(){
+            defaultUser = JSON.parse(defaultDevUser);
+            newUserCreated = defaultUser;
+            tempIdKey = readTempIdKeyFromConfig();
+        }
+
+        const loginHandler = async (...args) => {
+            console.log('loginHandler is called');
+
+            const userForLogin = { 
+                "siriusId": newUserCreated.siriusId, 
+                "siriusKey": newUserCreated.siriusKey,
+                "appId": tempIdKey.appId,
+                "appKey": tempIdKey.appKey
+                
+            };
+
+            token = await login(userForLogin);
+            bearerToken = token.accessToken;
+
+            let elem = document.querySelector('#user-info');
+
+            // Get HTML content
+            let html = elem.innerHTML;
+            
+            if (token.accessToken !== null 
+                && token.accessToken !== 'undefined' 
+                && token.accesToken !== ''){
+
+                elem.innerHTML = 'Welcome user ' +  defaultUser.username + ' , you are now logged in';
+
+                postLoginState();
+            }
+        }
+
+        function hideRegisterButton(){
+            document.getElementById('register-button').style.visibility = 'hidden';
+        }
+        function hideLoginButton(){
+            document.getElementById('login-button').style.visibility = 'hidden';
+        }
+
+        function hideBuildingButtons(){
+            document.getElementById('build-barracks-button').style.visibility  = 'hidden';
+            document.getElementById('build-farm-button').style.visibility  = 'hidden';
+            document.getElementById('build-gold-mine-button').style.visibility  = 'hidden';
+            document.getElementById('build-lumber-mill-button').style.visibility  = 'hidden';
+            document.getElementById('build-iron-mine-button').style.visibility  = 'hidden';
+        }
+
+        function showBuildingButtons(){
+            document.getElementById('build-barracks-button').style.visibility  = 'visible';
+            document.getElementById('build-farm-button').style.visibility  = 'visible';
+            document.getElementById('build-gold-mine-button').style.visibility  = 'visible';
+            document.getElementById('build-lumber-mill-button').style.visibility  = 'visible';
+            document.getElementById('build-iron-mine-button').style.visibility  = 'visible';
+        }
+
+        function disableBuildingButtons(){
+            document.getElementById('build-barracks-button').disabled = true;
+            document.getElementById('build-farm-button').disabled = true;
+            document.getElementById('build-gold-mine-button').disabled = true;
+            document.getElementById('build-lumber-mill-button').disabled = true;
+            document.getElementById('build-iron-mine-button').disabled = true;
+        }
+
+        function hideInventoryHeader(){
+            document.getElementById('inventory-info').style.visibility  = 'hidden';
+        }
+
+        function showInventoryHeader(){
+            document.getElementById('inventory-info').style.visibility  = 'visible';
+        }
+
+        function postLoginState(){
+            hideRegisterButton();
+            hideLoginButton();
+            showBuildingButtons();
+            showInventoryHeader();
+            retrieveLatestBalancing();
+            retrieveUserInventory();
+            createNewSettlementAndBuildings();
+            startProduction();
+        }
+        const retrieveLatestBalancing = async (...args) => {
+
+            latestBalancingRetrieved = await latestBalancing();
+
+            if (latestBalancingRetrieved.statusCode === 404 && latestBalancingRetrieved.message === 'No Data Yet') {
+                
+                initialBalancingCreated = await initializeBalancing();
+                latestBalancingRetrieved = initialBalancingCreated;
+
+                console.log('No balancing data found. Initial balancing created...');
+                console.log(initialBalancingCreated.contents);
+
+            } else {
+                
+                console.log('Balancing data found. Latest balancing retrieved...')
+                console.log(latestBalancingRetrieved.contents);
+            }     
+            
+        }
+
+        const retrieveUserInventory = async (...args) => {
+            latestInventoryRetrieved = await latestUserInventory(newUserCreated.id);
+            
+            if (latestInventoryRetrieved.content.length === 0) {
+                console.log('No inventory found for user with id: ' + newUserCreated.id);
+            } else {
+                console.log('Latest inventory retrieved');
+                console.log(latestInventoryRetrieved);
+            }
+        }
+
+        const createNewSettlementAndBuildings = async (...args) => {
+            settlementCreated = await createSettlement();
+
+            console.log('New settlement created');
+            console.log(settlementCreated);
+
+            const jsonObj = initialBalancingContent.Building;
+
+            for (i = 0; i<jsonObj.length;i++){
+
+                console.log('building object is : '+ jsonObj[i].id);
+
+                const newBuilding = await createBuilding(settlementCreated.id, jsonObj[i].id);
+            
+                monitorBuildingStatus(newBuilding.id, jsonObj[i].id, jsonObj[i].buildTime);
+            
+                console.log('New building in progress');
+                console.log(newBuilding);    
+            }
+        }
+
+        function enableBuildingButton(buttonId){
+            document.getElementById('build-'+ buttonId + '-button').disabled = false;
+        }
+
+        async function monitorBuildingStatus(buildingId, balancingContentId, buildTime){
+        
+            let activatedBuilding;
+
+            while (true) {
+                await sleep(buildTime + '000');
+                activatedBuilding = await getBuilding(buildingId);
+
+                if(activatedBuilding.status === 'activated') {
+                    console.log('activated building id: ' + activatedBuilding.id);
+                    console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
+                    console.log('activated building status: ' + activatedBuilding.status);
+                    buildingsCreated.push(activatedBuilding);
+                    console.log('List of buildings created: ' + JSON.stringify(buildingsCreated));
+                    enableBuildingButton(balancingContentId);
+                    console.log('Building button for '+balancingContentId+' enabled');
+                    break;
+                }
+            }
+        }
+            
+        async function monitorProductionQuantity(productionId, secondInterval, produceId){
+            console.log('monitoring product quantity');
+            console.log('production id: ' + productionId);
+            console.log('second interval: ' + secondInterval);
+
+            let productionReadyForCollection;
+
+            while(true){
+                await sleep(secondInterval + '000')
+                let monitoredProduction = await retrieveProduction(productionId);
+
+                if (monitoredProduction.meta.quantity !== 0) {
+                    console.log('quantity is now: ' + monitoredProduction.meta.quantity + ' for produceId ' + monitoredProduction.meta.produceId);
+                    let collectedProduction = await collectProduction(monitoredProduction.buildingId);
+                    console.log('collected production');
+                    console.log(collectedProduction);
+
+                    let elem = document.querySelector('#inventory-'+produceId);
+                    let html = elem.innerHTML;
+            
+                    //elem.innerHTML = 'test';
+                    //elem.innerHTML = produceId + ' quantity: ' + collectedProduction.meta.collected;
+
+                    
+                }
+                
+            }
+        }
+
+        const startProduction = async (balancingContentId, itemId) => {
+            console.log('production for ' + balancingContentId + ' triggered');
+
+            //retrieve the necessary function parameters for starting the production
+            let buildingId;
+            
+            console.log('iterating on buildings created');
+            console.log(buildingsCreated);
+
+            for (i = 0; i < buildingsCreated.length; i++) {
+                console.log('iteration step: '+ i);
+                console.log('comparing '+ buildingsCreated[i].balancingContentId);
+                console.log('to '+ balancingContentId);
+
+                if (buildingsCreated[i].balancingContentId === balancingContentId){
+                    buildingId = buildingsCreated[i].id;
+                    console.log('retrieving building id: ' + buildingsCreated[i].id);
+                    break;
+                }
+
+            }
+
+            let production = await createProduction(buildingId, itemId, 'start');
+            monitorProductionQuantity(production.id, 1, itemId); 
+            console.log('production is in progress');
+            console.log(production)
+
+        }
+
+        
+    </script>
+
+<table>
+    <tr>
+      <th id="user-info"></th>
+    </tr>
+    <tr>
+        <td>
+            <button id="register-button" type="button" onclick="javascript:registerHandler()">Register</button>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <button id="login-button" type="button" onclick="javascript:loginHandler()">Login</button>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <button id="build-barracks-button" type="button" onclick="javascript:startProduction('barracks', 'soldier') ">Barracks</button>
+            <button id="build-farm-button" type="button" onclick="javascript:startProduction('farm', 'food') ">Farm</button>
+            <button id="build-gold-mine-button" type="button" onclick="javascript:startProduction('gold-mine', 'gold') ">Gold Mine</button>
+            <button id="build-lumber-mill-button" type="button" onclick="javascript:startProduction('lumber-mill', 'lumber') ">Lumber Mill</button>
+            <button id="build-iron-mine-button" type="button" onclick="javascript:startProduction('iron-mine', 'iron') ">Iron Mine</button>
+        </td>
+    </tr>
+  </table>
+  <br>
+  <br>
+  <table>
+    <tr>
+      <th id="inventory-info">Inventory</th>
+    </tr>
+    <tr>
+        <td id="inventory-soldiers">
+            
+        </td>
+    </tr>
+    <tr>
+        <td id="inventory-food">
+            
+        </td>
+    </tr>
+    <tr>
+        <td id="inventory-gold">
+            
+        </td>
+    </tr>
+    <tr>
+        <td id="inventory-lumber">
+        
+        </td>
+    </tr>
+    <tr>
+        <td id="inventory-iron">
+            
+        </td>
+    </tr>
+  </table>
+</body>
+</html>
