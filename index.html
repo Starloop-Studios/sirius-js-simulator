@@ -182,10 +182,20 @@
 
         function hideInventoryHeader(){
             document.getElementById('inventory-info').style.visibility  = 'hidden';
+            document.getElementById('inventory-soldiers').style.visibility  = 'hidden';
+            document.getElementById('inventory-food').style.visibility  = 'hidden';
+            document.getElementById('inventory-gold').style.visibility  = 'hidden';
+            document.getElementById('inventory-lumber').style.visibility  = 'hidden';
+            document.getElementById('inventory-iron').style.visibility  = 'hidden';
         }
 
         function showInventoryHeader(){
             document.getElementById('inventory-info').style.visibility  = 'visible';
+            document.getElementById('inventory-soldiers').style.visibility  = 'visible';
+            document.getElementById('inventory-food').style.visibility  = 'visible';
+            document.getElementById('inventory-gold').style.visibility  = 'visible';
+            document.getElementById('inventory-lumber').style.visibility  = 'visible';
+            document.getElementById('inventory-iron').style.visibility  = 'visible';
         }
 
         function postLoginState(){
@@ -292,12 +302,15 @@
                     console.log('collected production');
                     console.log(collectedProduction);
 
+                    latestInventoryRetrieved = await latestUserInventory(newUserCreated.id);
+                    console.log('post collect inventory retrieval: ' + JSON.stringify(latestInventoryRetrieved));
+
                     let elem = document.querySelector('#inventory-'+produceId);
                     let html = elem.innerHTML;
             
-                    //elem.innerHTML = 'test';
-                    //elem.innerHTML = produceId + ' quantity: ' + collectedProduction.meta.collected;
-
+                    if(latestInventoryRetrieved.content.length !==0) {
+                        elem.innerHTML = produceId + ': ' + latestInventoryRetrieved.content[0].quantity;  
+                    }
                     
                 }
                 
@@ -368,27 +381,27 @@
     </tr>
     <tr>
         <td id="inventory-soldiers">
-            
+            soldier: 0
         </td>
     </tr>
     <tr>
         <td id="inventory-food">
-            
+            food: 0
         </td>
     </tr>
     <tr>
         <td id="inventory-gold">
-            
+            gold: 0
         </td>
     </tr>
     <tr>
         <td id="inventory-lumber">
-        
+            lumber: 0
         </td>
     </tr>
     <tr>
         <td id="inventory-iron">
-            
+            iron: 0
         </td>
     </tr>
   </table>

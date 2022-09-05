@@ -186,14 +186,14 @@ async function latestUserInventory(userId){
     let latestInventory;
 
     //get the configs
-    const inventoryForRetrievalFromJSON = JSON.parse(inventoryForRetrievalByAll);
+    const inventoryForRetrievalByAllFromJSON = JSON.parse(inventoryForRetrievalByAll);
 
 
     //construct the complete endpoint url
-    const inventoryForRetrievalFromJSONEndPoint = baseUrlForEndpointsFromJSON.protocol +  
+    const inventoryForRetrievalByAllFromJSONEndPoint = baseUrlForEndpointsFromJSON.protocol +  
         baseUrlForEndpointsFromJSON.host +  
         baseUrlForEndpointsFromJSON.port + 
-        inventoryForRetrievalFromJSON.path +
+        inventoryForRetrievalByAllFromJSON.path +
         '?userId='+userId+'&page=1&size=10000'
 
     //construct the headers, body, and set the method
@@ -201,11 +201,11 @@ async function latestUserInventory(userId){
         headers: {
             'Authorization': 'Bearer ' + bearerToken,
           },
-        method: inventoryForRetrievalFromJSON.method,
+        method: inventoryForRetrievalByAllFromJSON.method,
     }
 
     //call the backend endpoint for creating new user
-    let response = await fetch(inventoryForRetrievalFromJSONEndPoint, requestOptions)
+    let response = await fetch(inventoryForRetrievalByAllFromJSONEndPoint, requestOptions)
         .then(response=>response.json())
         .then(data=> { 
             //console.log('retrieved inventory test...');
