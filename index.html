@@ -50,6 +50,8 @@
             hideInventoryControls();
         }
         function postLoginState(){
+            retrieveLatestBalancing();
+            retrieveUserInventory();
             hideRegistrationControl();
             hideLoginControlrs();
             buildSettlement();
@@ -114,6 +116,12 @@
             document.getElementById('build-gold-mine-row').style.visibility  = 'hidden';
             document.getElementById('build-lumber-mill-row').style.visibility  = 'hidden';
             document.getElementById('build-iron-mine-row').style.visibility  = 'hidden';
+        }
+
+        function initializeBuildingControlCounterAndStatus(){
+            var elem = document.querySelector('#build-barracks-timer');
+            elem.value = 'hours:0, minute:0, seconds:'+seconds
+
         }
 
         function showBuildBuildingsControls(){
