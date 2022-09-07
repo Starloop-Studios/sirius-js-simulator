@@ -26,71 +26,105 @@
         let settlementCreated;
         let buildingsCreated = new Array();
         let productionCollected = new Array();
-
-        //testFunctions();
+    
+        let buildingBarracksTimerInterval;
+        let buildingFarmTimerInterval;
+        let buildingGoldMineTimerInterval;
+        let buildingLumberMillTimerInterval;
+        let buildingIronMineTimerInterval;
 
         document.addEventListener('DOMContentLoaded', (event) => {
             
-            initialize();
-
+            init();
+            
         });
 
-        async function testFunctions(){
-            /*
-            tempIdKey = readTempIdKeyFromConfig();
-
-            console.log('temp id: ' + tempIdKey.appId);
-            console.log('temp id: ' + tempIdKey.appKey);
-
-            tempToken = await login(tempIdKey);
-
-            bearerToken = tempToken.accessToken;
-
-            newUserCreated = await register();
-
-            console.log('id: ' + newUserCreated.id);
-            console.log('sirius id: ' + newUserCreated.siriusId);
-            console.log('sirius key: '+ newUserCreated.siriusKey);
-            console.log('username: '+ newUserCreated.username);
-            
-            let userForLogin = { 
-                "siriusId": newUserCreated.siriusId, 
-                "siriusKey": newUserCreated.siriusKey,
-                "appId": tempIdKey.appId,
-                "appKey": tempIdKey.appKey
-                
-            }; 
-
-            /*let userForLogin = { 
-                "siriusId": "b12pobj7mm", 
-                "siriusKey": "2iej37x528m0000000000",
-                "appId": tempIdKey.appId,
-                "appKey": tempIdKey.appKey
-                
-            };*/
-            
-            token = await login(userForLogin);
-            bearerToken = token.accessToken;
-
-            console.log('token: ' + token);
-            /*
-            initialBalancingCreated = await initializeBalancing();
-
-            console.log('initial balancing created ' + initialBalancingCreated.id);
-            
-            latestBalancingRetrieved = await latestBalancing();
-            console.log('Latest balancing retrieved: ' + latestBalancingRetrieved.id);
-
-            latestInventoryRetrieved = await latestUserInventory(newUserCreated.id);
-            console.log('retrieved inventory...');
-            console.log(latestInventoryRetrieved);
-
-            settlementCreated = await createSettlement();
-            console.log('new settlement created...');
-            console.log(settlementCreated); */
+        function init(){
+            intialState();
         }
 
-        const registerHandler = async (...args) => {
+        function intialState(){
+            disableLoginButtons();
+            hideBuildBuildingsControls();
+            hideProductionControls();
+            hideInventoryControls();
+        }
+        function postLoginState(){
+            hideRegistrationControl();
+            hideLoginControlrs();
+            buildSettlement();
+        }
+
+        function hideRegistrationControl(){
+            document.getElementById('register-button').style.visibility = 'hidden';
+        }
+        function hideLoginControlrs(){
+            document.getElementById('login-button').style.visibility = 'hidden';
+        }
+
+        function disableRegistrationButton(){
+            document.getElementById('register-button').disabled = true;
+        }
+
+        function disableLoginButtons(){
+            document.getElementById('login-button').disabled = true;
+        }
+
+        function enableLoginButtons(){
+            document.getElementById('login-button').disabled = false;
+        }
+
+        function hideProductionControls(){
+            document.getElementById('production-buttons-row').style.visibility  = 'hidden';
+        }
+
+        function showProductionControls(){
+            document.getElementById('production-buttons-row').style.visibility  = 'visible';
+        }
+
+        function disableProductionButtons(){
+            document.getElementById('produce-barracks-button').disabled = true;
+            document.getElementById('produce-farm-button').disabled = true;
+            document.getElementById('produce-gold-mine-button').disabled = true;
+            document.getElementById('produce-lumber-mill-button').disabled = true;
+            document.getElementById('produce-iron-mine-button').disabled = true;
+        }
+
+        function hideInventoryControls(){
+            document.getElementById('inventory-info').style.visibility  = 'hidden';
+            document.getElementById('inventory-soldiers').style.visibility  = 'hidden';
+            document.getElementById('inventory-food').style.visibility  = 'hidden';
+            document.getElementById('inventory-gold').style.visibility  = 'hidden';
+            document.getElementById('inventory-lumber').style.visibility  = 'hidden';
+            document.getElementById('inventory-iron').style.visibility  = 'hidden';
+        }
+
+        function showInventoryControls(){
+            document.getElementById('inventory-info').style.visibility  = 'visible';
+            document.getElementById('inventory-soldiers').style.visibility  = 'visible';
+            document.getElementById('inventory-food').style.visibility  = 'visible';
+            document.getElementById('inventory-gold').style.visibility  = 'visible';
+            document.getElementById('inventory-lumber').style.visibility  = 'visible';
+            document.getElementById('inventory-iron').style.visibility  = 'visible';
+        }
+
+        function hideBuildBuildingsControls(){
+            document.getElementById('build-barracks-row').style.visibility  = 'hidden';
+            document.getElementById('build-farm-row').style.visibility  = 'hidden';
+            document.getElementById('build-gold-mine-row').style.visibility  = 'hidden';
+            document.getElementById('build-lumber-mill-row').style.visibility  = 'hidden';
+            document.getElementById('build-iron-mine-row').style.visibility  = 'hidden';
+        }
+
+        function showBuildBuildingsControls(){
+            document.getElementById('build-barracks-row').style.visibility  = 'visible';
+            document.getElementById('build-farm-row').style.visibility  = 'visible';
+            document.getElementById('build-gold-mine-row').style.visibility  = 'visible';
+            document.getElementById('build-lumber-mill-row').style.visibility  = 'visible';
+            document.getElementById('build-iron-mine-row').style.visibility  = 'visible';
+        }
+
+        const registerHandler = async () => {
             console.log('registerHandler is called');
 
             tempIdKey = readTempIdKeyFromConfig();
@@ -104,23 +138,13 @@
             // Get HTML content
             var html = elem.innerHTML;
             elem.innerHTML = 'New user with username ' +  newUserCreated.username + ' registered';
+
+            disableRegistrationButton();
+            enableLoginButtons();
  
         }
 
-        function initialize(){
-            hideBuildingButtons();
-            disableBuildingButtons();
-            hideInventoryHeader();
-            loadDefaultUser();
-        }
-
-        function loadDefaultUser(){
-            defaultUser = JSON.parse(defaultDevUser);
-            newUserCreated = defaultUser;
-            tempIdKey = readTempIdKeyFromConfig();
-        }
-
-        const loginHandler = async (...args) => {
+        const loginHandler = async () => {
             console.log('loginHandler is called');
 
             const userForLogin = { 
@@ -143,72 +167,13 @@
                 && token.accessToken !== 'undefined' 
                 && token.accesToken !== ''){
 
-                elem.innerHTML = 'Welcome user ' +  defaultUser.username + ' , you are now logged in';
+                elem.innerHTML = 'Welcome user ' +  newUserCreated.username + ' , you are now logged in';
 
                 postLoginState();
             }
         }
 
-        function hideRegisterButton(){
-            document.getElementById('register-button').style.visibility = 'hidden';
-        }
-        function hideLoginButton(){
-            document.getElementById('login-button').style.visibility = 'hidden';
-        }
-
-        function hideBuildingButtons(){
-            document.getElementById('build-barracks-button').style.visibility  = 'hidden';
-            document.getElementById('build-farm-button').style.visibility  = 'hidden';
-            document.getElementById('build-gold-mine-button').style.visibility  = 'hidden';
-            document.getElementById('build-lumber-mill-button').style.visibility  = 'hidden';
-            document.getElementById('build-iron-mine-button').style.visibility  = 'hidden';
-        }
-
-        function showBuildingButtons(){
-            document.getElementById('build-barracks-button').style.visibility  = 'visible';
-            document.getElementById('build-farm-button').style.visibility  = 'visible';
-            document.getElementById('build-gold-mine-button').style.visibility  = 'visible';
-            document.getElementById('build-lumber-mill-button').style.visibility  = 'visible';
-            document.getElementById('build-iron-mine-button').style.visibility  = 'visible';
-        }
-
-        function disableBuildingButtons(){
-            document.getElementById('build-barracks-button').disabled = true;
-            document.getElementById('build-farm-button').disabled = true;
-            document.getElementById('build-gold-mine-button').disabled = true;
-            document.getElementById('build-lumber-mill-button').disabled = true;
-            document.getElementById('build-iron-mine-button').disabled = true;
-        }
-
-        function hideInventoryHeader(){
-            document.getElementById('inventory-info').style.visibility  = 'hidden';
-            document.getElementById('inventory-soldiers').style.visibility  = 'hidden';
-            document.getElementById('inventory-food').style.visibility  = 'hidden';
-            document.getElementById('inventory-gold').style.visibility  = 'hidden';
-            document.getElementById('inventory-lumber').style.visibility  = 'hidden';
-            document.getElementById('inventory-iron').style.visibility  = 'hidden';
-        }
-
-        function showInventoryHeader(){
-            document.getElementById('inventory-info').style.visibility  = 'visible';
-            document.getElementById('inventory-soldiers').style.visibility  = 'visible';
-            document.getElementById('inventory-food').style.visibility  = 'visible';
-            document.getElementById('inventory-gold').style.visibility  = 'visible';
-            document.getElementById('inventory-lumber').style.visibility  = 'visible';
-            document.getElementById('inventory-iron').style.visibility  = 'visible';
-        }
-
-        function postLoginState(){
-            hideRegisterButton();
-            hideLoginButton();
-            showBuildingButtons();
-            showInventoryHeader();
-            retrieveLatestBalancing();
-            retrieveUserInventory();
-            createNewSettlementAndBuildings();
-            startProduction();
-        }
-        const retrieveLatestBalancing = async (...args) => {
+        const retrieveLatestBalancing = async () => {
 
             latestBalancingRetrieved = await latestBalancing();
 
@@ -228,7 +193,7 @@
             
         }
 
-        const retrieveUserInventory = async (...args) => {
+        const retrieveUserInventory = async () => {
             latestInventoryRetrieved = await latestUserInventory(newUserCreated.id);
             
             if (latestInventoryRetrieved.content.length === 0) {
@@ -239,52 +204,136 @@
             }
         }
 
-        const createNewSettlementAndBuildings = async (...args) => {
-            settlementCreated = await createSettlement();
+        async function monitorBuildingBarracksStatus(buildingId, balancingContentId, buildTime){
+            console.log('monitorBuildingBarracksStatus called');
+            console.log('buildingId: ' + buildingId);
+            console.log('balancingContentId: ' + balancingContentId);
+            console.log('buildTime: ' + buildTime);
 
-            console.log('New settlement created');
-            console.log(settlementCreated);
-
-            const jsonObj = initialBalancingContent.Building;
-
-            for (i = 0; i<jsonObj.length;i++){
-
-                console.log('building object is : '+ jsonObj[i].id);
-
-                const newBuilding = await createBuilding(settlementCreated.id, jsonObj[i].id);
-            
-                monitorBuildingStatus(newBuilding.id, jsonObj[i].id, jsonObj[i].buildTime);
-            
-                console.log('New building in progress');
-                console.log(newBuilding);    
-            }
-        }
-
-        function enableBuildingButton(buttonId){
-            document.getElementById('build-'+ buttonId + '-button').disabled = false;
-        }
-
-        async function monitorBuildingStatus(buildingId, balancingContentId, buildTime){
-        
             let activatedBuilding;
 
             while (true) {
+                console.log('monitoring if barracks is activated');
                 await sleep(buildTime + '000');
                 activatedBuilding = await getBuilding(buildingId);
 
                 if(activatedBuilding.status === 'activated') {
+                    buildBarracksActivatedCallback(activatedBuilding);
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
                     buildingsCreated.push(activatedBuilding);
                     console.log('List of buildings created: ' + JSON.stringify(buildingsCreated));
-                    enableBuildingButton(balancingContentId);
-                    console.log('Building button for '+balancingContentId+' enabled');
+                    
                     break;
                 }
             }
         }
-            
+
+        async function monitorBuildingFarmStatus(buildingId, balancingContentId, buildTime){
+            console.log('monitorBuildingFarmStatus called');
+            console.log('buildingId: ' + buildingId);
+            console.log('balancingContentId: ' + balancingContentId);
+            console.log('buildTime: ' + buildTime);
+
+            let activatedBuilding;
+
+            while (true) {
+                console.log('monitoring if farm is activated');
+                await sleep(buildTime + '000');
+                activatedBuilding = await getBuilding(buildingId);
+
+                if(activatedBuilding.status === 'activated') {
+                    buildFarmActivatedCallback(activatedBuilding);
+                    console.log('activated building id: ' + activatedBuilding.id);
+                    console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
+                    console.log('activated building status: ' + activatedBuilding.status);
+                    buildingsCreated.push(activatedBuilding);
+                    console.log('List of buildings created: ' + JSON.stringify(buildingsCreated));
+                    
+                    break;
+                }
+            }
+        }
+
+        async function monitorBuildingGoldMineStatus(buildingId, balancingContentId, buildTime){
+            console.log('monitorBuildingGoldMineStatus called');
+            console.log('buildingId: ' + buildingId);
+            console.log('balancingContentId: ' + balancingContentId);
+            console.log('buildTime: ' + buildTime);
+
+            let activatedBuilding;
+
+            while (true) {
+                console.log('monitoring if gold-mine is activated');
+                await sleep(buildTime + '000');
+                activatedBuilding = await getBuilding(buildingId);
+
+                if(activatedBuilding.status === 'activated') {
+                    buildGoldMineActivatedCallback(activatedBuilding);
+                    console.log('activated building id: ' + activatedBuilding.id);
+                    console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
+                    console.log('activated building status: ' + activatedBuilding.status);
+                    buildingsCreated.push(activatedBuilding);
+                    console.log('List of buildings created: ' + JSON.stringify(buildingsCreated));
+                    
+                    break;
+                }
+            }
+        }
+
+        async function monitorBuildingLumberMillStatus(buildingId, balancingContentId, buildTime){
+            console.log('monitorBuildingLumberMillStatus called');
+            console.log('buildingId: ' + buildingId);
+            console.log('balancingContentId: ' + balancingContentId);
+            console.log('buildTime: ' + buildTime);
+
+            let activatedBuilding;
+
+            while (true) {
+                console.log('monitoring if lumber-mill is activated');
+                await sleep(buildTime + '000');
+                activatedBuilding = await getBuilding(buildingId);
+
+                if(activatedBuilding.status === 'activated') {
+                    buildLumberMillActivatedCallback(activatedBuilding);
+                    console.log('activated building id: ' + activatedBuilding.id);
+                    console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
+                    console.log('activated building status: ' + activatedBuilding.status);
+                    buildingsCreated.push(activatedBuilding);
+                    console.log('List of buildings created: ' + JSON.stringify(buildingsCreated));
+                    
+                    break;
+                }
+            }
+        }
+        
+        async function monitorBuildingIronMineStatus(buildingId, balancingContentId, buildTime){
+            console.log('monitorBuildingIronMineStatus called');
+            console.log('buildingId: ' + buildingId);
+            console.log('balancingContentId: ' + balancingContentId);
+            console.log('buildTime: ' + buildTime);
+
+            let activatedBuilding;
+
+            while (true) {
+                console.log('monitoring if iron-mine is activated');
+                await sleep(buildTime + '000');
+                activatedBuilding = await getBuilding(buildingId);
+
+                if(activatedBuilding.status === 'activated') {
+                    buildIronMineActivatedCallback(activatedBuilding);
+                    console.log('activated building id: ' + activatedBuilding.id);
+                    console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
+                    console.log('activated building status: ' + activatedBuilding.status);
+                    buildingsCreated.push(activatedBuilding);
+                    console.log('List of buildings created: ' + JSON.stringify(buildingsCreated));
+                    
+                    break;
+                }
+            }
+        }
+
         async function monitorProductionQuantity(productionId, secondInterval, produceId){
             console.log('monitoring product quantity');
             console.log('production id: ' + productionId);
@@ -345,7 +394,298 @@
             console.log(production)
 
         }
+        
+        function buildingBarracksStartTimer(millisecondTick, buildTime){
+            let seconds = buildTime;
+            let minutes = 0; 
+            let hours = 0;
 
+            buildingBarracksTimerInterval = setInterval(function () {           
+                
+                seconds--;
+
+                if (seconds >= 0) {
+                    minutes = Math.floor(seconds/60);
+                    hours = Math.floor(minutes/60);
+                } else {
+                    minutes = 0;
+                    hours = 0;
+                }
+                
+
+            var elem = document.querySelector('#build-barracks-timer');
+            elem.value = 'hours:'+hours+', minute:'+minutes+', seconds:'+seconds
+
+            }, millisecondTick);
+            
+        }
+
+        function buildingFarmStartTimer(millisecondTick, buildTime){
+            let seconds = buildTime; 
+            let minutes = 0; 
+            let hours = 0;
+
+            buildingFarmTimerInterval = setInterval(function () {           
+                
+                seconds--;
+
+                if (seconds >= 0) {
+                    minutes = Math.floor(seconds/60);
+                    hours = Math.floor(minutes/60);
+                } else {
+                    minutes = 0;
+                    hours = 0;
+                }
+
+
+            var elem = document.querySelector('#build-farm-timer');
+            elem.value = 'hours:'+hours+', minute:'+minutes+', seconds:'+seconds
+
+            }, millisecondTick);
+            
+        }
+
+        function buildingGoldMineStartTimer(millisecondTick, buildTime){
+            let seconds = buildTime; 
+            let minutes = 0; 
+            let hours = 0;
+
+            buildingGoldMineTimerInterval = setInterval(function () {           
+                
+                seconds--;
+
+                if (seconds >= 0) {
+                    minutes = Math.floor(seconds/60);
+                    hours = Math.floor(minutes/60);
+                } else {
+                    minutes = 0;
+                    hours = 0;
+                }
+
+
+            var elem = document.querySelector('#build-gold-mine-timer');
+            elem.value = 'hours:'+hours+', minute:'+minutes+', seconds:'+seconds
+
+            }, millisecondTick);
+            
+        }
+
+        function buildingLumberMillStartTimer(millisecondTick, buildTime){
+            let seconds = buildTime; 
+            let minutes = 0; 
+            let hours = 0;
+
+            buildingLumberMillTimerInterval = setInterval(function () {           
+                
+                seconds--;
+
+                if (seconds >= 0) {
+                    minutes = Math.floor(seconds/60);
+                    hours = Math.floor(minutes/60);
+                } else {
+                    minutes = 0;
+                    hours = 0;
+                }
+
+
+            var elem = document.querySelector('#build-lumber-mill-timer');
+            elem.value = 'hours:'+hours+', minute:'+minutes+', seconds:'+seconds
+
+            }, millisecondTick);
+            
+        }
+
+        function buildingIronMineStartTimer(millisecondTick, buildTime){
+            let seconds = buildTime; 
+            let minutes = 0; 
+            let hours = 0;
+
+            buildingIronMineTimerInterval = setInterval(function () {           
+                
+                seconds--;
+
+                if (seconds >= 0) {
+                    minutes = Math.floor(seconds/60);
+                    hours = Math.floor(minutes/60);
+                } else {
+                    minutes = 0;
+                    hours = 0;
+                }
+
+
+            var elem = document.querySelector('#build-iron-mine-timer');
+            elem.value = 'hours:'+hours+', minute:'+minutes+', seconds:'+seconds
+
+            }, millisecondTick);
+            
+        }
+
+        function buildingBarracksStopTimer() {
+            clearInterval(buildingBarracksTimerInterval);
+        }
+
+        function buildingFarmStopTimer() {
+            clearInterval(buildingFarmTimerInterval);
+        }
+
+        function buildingGoldMineStopTimer() {
+            clearInterval(buildingGoldMineTimerInterval);
+        }
+
+        function buildLumberMillStopTimer(){
+            clearInterval(buildingLumberMillTimerInterval);
+        }
+
+        function buildIronMineStopTimer(){
+            clearInterval(buildingIronMineTimerInterval);
+        }
+
+        const buildSettlement = async () => {
+            
+            console.log('buildSettlement called');
+            
+            settlementCreated = await createSettlement();
+            
+            
+            console.log('settlement created');
+            console.log(settlementCreated);
+
+            showBuildBuildingsControls();
+            showProductionControls();
+            disableProductionButtons();
+            showInventoryControls();
+        }
+
+        const buildBarracksHandler = async() =>{
+            console.log('buildBarracksHandler called');
+            const jsonObj = initialBalancingContent.Building;
+            var elem = document.querySelector('#build-barracks-status');
+            elem.value = 'Building Barracks...';
+            document.getElementById('build-barracks-button').disabled = true;
+
+            buildingBarracksStartTimer(millisecondTickForTimer, 20);
+            const newBarracks = await createBuilding(settlementCreated.id, 'barracks');
+            monitorBuildingBarracksStatus(newBarracks.id, 'barracks', 20);
+            
+        }
+
+        const buildFarmHandler = async() =>{
+            console.log('buildFarmHandler called');
+            const jsonObj = initialBalancingContent.Building;
+            var elem = document.querySelector('#build-farm-status');
+            elem.value = 'Building Farm...';
+            document.getElementById('build-farm-button').disabled = true;
+
+            buildingFarmStartTimer(millisecondTickForTimer, 5);
+            const newFarm = await createBuilding(settlementCreated.id, 'farm');
+            monitorBuildingFarmStatus(newFarm.id, 'farm', 5);
+            
+        }
+
+        const buildGoldMineHandler = async() =>{
+            console.log('buildGoldMineHandler called');
+            const jsonObj = initialBalancingContent.Building;
+            var elem = document.querySelector('#build-gold-mine-status');
+            elem.value = 'Building Gold Mine...';
+            document.getElementById('build-gold-mine-button').disabled = true;
+
+            buildingGoldMineStartTimer(millisecondTickForTimer, 7);
+            const newGoldMine = await createBuilding(settlementCreated.id, 'gold-mine');
+            monitorBuildingGoldMineStatus(newGoldMine.id, 'gold-mine', 7);
+            
+        }
+
+        const buildLumberMillHandler = async() =>{
+            console.log('buildLumberMillHandler called');
+            const jsonObj = initialBalancingContent.Building;
+            var elem = document.querySelector('#build-lumber-mill-status');
+            elem.value = 'Building Lumber Mine...';
+            document.getElementById('build-lumber-mill-button').disabled = true;
+
+            buildingLumberMillStartTimer(millisecondTickForTimer, 10);
+            const newLumberMill = await createBuilding(settlementCreated.id, 'lumber-mill');
+            monitorBuildingLumberMillStatus(newLumberMill.id, 'lumber-mill', 10);
+            
+        }
+
+        const buildIronMineHandler = async() =>{
+            console.log('buildIronMineHandler called');
+            const jsonObj = initialBalancingContent.Building;
+            var elem = document.querySelector('#build-iron-mine-status');
+            elem.value = 'Building Iron Mine...';
+            document.getElementById('build-iron-mine-button').disabled = true;
+
+            buildingIronMineStartTimer(millisecondTickForTimer, 15);
+            const newIronMine = await createBuilding(settlementCreated.id, 'iron-mine');
+            monitorBuildingIronMineStatus(newIronMine.id, 'iron-mine', 15);
+            
+        }
+
+        const buildBarracksActivatedCallback = async(activatedBarracks)=>{
+            buildingBarracksStopTimer();
+            
+            var elem = document.querySelector('#build-barracks-status');
+            elem.value = 'Barracks created';
+
+            document.getElementById('produce-barracks-button').disabled = false;
+
+            console.log('Barracks created');
+            console.log(activatedBarracks);
+            
+        }
+
+        const buildFarmActivatedCallback = async(activatedFarm)=>{
+            buildingFarmStopTimer();
+            
+            var elem = document.querySelector('#build-farm-status');
+            elem.value = 'Farm created';
+
+            document.getElementById('produce-farm-button').disabled = false;
+
+            console.log('Farm created');
+            console.log(activatedFarm);
+            
+        }
+
+        const buildGoldMineActivatedCallback = async(activatedGoldMine)=>{
+            buildingGoldMineStopTimer();
+            
+            var elem = document.querySelector('#build-gold-mine-status');
+            elem.value = 'Gold Mine created';
+
+            document.getElementById('produce-gold-mine-button').disabled = false;
+
+            console.log('Gold Mine created');
+            console.log(activatedGoldMine);
+            
+        }
+
+        const buildLumberMillActivatedCallback = async(activatedLumberMill)=>{
+            buildLumberMillStopTimer();
+            
+            var elem = document.querySelector('#build-lumber-mill-status');
+            elem.value = 'Lumber Mill created';
+
+            document.getElementById('produce-lumber-mill-button').disabled = false;
+
+            console.log('Lumber Mill created');
+            console.log(activatedLumberMill);
+            
+        }
+
+        const buildIronMineActivatedCallback = async(activatedIronMine)=>{
+            buildIronMineStopTimer();
+            
+            var elem = document.querySelector('#build-iron-mine-status');
+            elem.value = 'Iron Mine created';
+
+            document.getElementById('produce-iron-mine-button').disabled = false;
+
+            console.log('Iron mine created');
+            console.log(activatedIronMine);
+            
+        }
+        
         
     </script>
 
@@ -363,13 +703,50 @@
             <button id="login-button" type="button" onclick="javascript:loginHandler()">Login</button>
         </td>
     </tr>
-    <tr>
+    <tr id="build-barracks-row">
         <td>
-            <button id="build-barracks-button" type="button" onclick="javascript:startProduction('barracks', 'soldier') ">Barracks</button>
-            <button id="build-farm-button" type="button" onclick="javascript:startProduction('farm', 'food') ">Farm</button>
-            <button id="build-gold-mine-button" type="button" onclick="javascript:startProduction('gold-mine', 'gold') ">Gold Mine</button>
-            <button id="build-lumber-mill-button" type="button" onclick="javascript:startProduction('lumber-mill', 'lumber') ">Lumber Mill</button>
-            <button id="build-iron-mine-button" type="button" onclick="javascript:startProduction('iron-mine', 'iron') ">Iron Mine</button>
+            <p>Building Controls</p>
+            <button id="build-barracks-button" type="button" onclick="javascript:buildBarracksHandler()">Build Barracks</button>
+            <label>Timer </label><input id="build-barracks-timer" type="text" disabled=true size="31">
+            <label>Status </label><input id="build-barracks-status" type="text" disabled=true>
+        </td>
+    </tr>
+    <tr id="build-farm-row">
+        <td>
+            <button id="build-farm-button" type="button" onclick="javascript:buildFarmHandler()">Build Farm</button>
+            <label>Timer </label><input id="build-farm-timer" type="text" disabled=true size="31">
+            <label>Status </label><input id="build-farm-status" type="text" disabled=true>
+        </td>
+    </tr>
+    <tr id="build-gold-mine-row">
+        <td>
+            <button id="build-gold-mine-button" type="button" onclick="javascript:buildGoldMineHandler()">Build Gold Mine</button>
+            <label>Timer </label><input id="build-gold-mine-timer" type="text" disabled=true size="31">
+            <label>Status </label><input id="build-gold-mine-status" type="text" disabled=true>
+        </td>
+    </tr>
+    <tr id="build-lumber-mill-row">
+        <td>
+            <button id="build-lumber-mill-button" type="button" onclick="javascript:buildLumberMillHandler()">Build Lumber Mill</button>
+            <label>Timer </label><input id="build-lumber-mill-timer" type="text" disabled=true size="31">
+            <label>Status </label><input id="build-lumber-mill-status" type="text" disabled=true>
+        </td>
+    </tr>
+    <tr id="build-iron-mine-row">
+        <td>
+            <button id="build-iron-mine-button" type="button" onclick="javascript:buildIronMineHandler()">Build Iron Mine</button>
+            <label>Timer </label><input id="build-iron-mine-timer" type="text" disabled=true size="31">
+            <label>Status </label><input id="build-iron-mine-status" type="text" disabled=true>
+        </td>
+    </tr>
+    <tr id="production-buttons-row">
+        <td>
+            <p>Resource Production Controls</p>
+            <button id="produce-barracks-button" type="button" onclick="javascript:startProduction('barracks', 'soldier') ">Produce Soldier</button>
+            <button id="produce-farm-button" type="button" onclick="javascript:startProduction('farm', 'food') ">Produce Food</button>
+            <button id="produce-gold-mine-button" type="button" onclick="javascript:startProduction('gold-mine', 'gold') ">Produce Gold</button>
+            <button id="produce-lumber-mill-button" type="button" onclick="javascript:startProduction('lumber-mill', 'lumber') ">Produce Lumber</button>
+            <button id="produce-iron-mine-button" type="button" onclick="javascript:startProduction('iron-mine', 'iron') ">Produce Iron</button>
         </td>
     </tr>
   </table>
