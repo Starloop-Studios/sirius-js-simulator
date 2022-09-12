@@ -151,7 +151,7 @@ async function initializeBalancing(){
     return balancing;
 }
 
-async function latestBalancing() {
+async function latestBalancing(callback) {
     let latestBalancing;
 
     //get the configs
@@ -176,13 +176,14 @@ async function latestBalancing() {
         .then(data=> { 
             //console.log('retrieved balancing: ' + data);
             latestBalancing = data;
+            callback(latestBalancing);
         })
 
     //return the response body as json
     return latestBalancing;
 }
 
-async function latestUserInventory(userId){
+async function latestUserInventory(userId, callback){
     let latestInventory;
 
     //get the configs
@@ -211,13 +212,14 @@ async function latestUserInventory(userId){
             //console.log('retrieved inventory test...');
             //console.log(data.content);
             latestInventory = data;
+            callback(latestInventory);
         })
 
     //return the response body as json
     return latestInventory;
 }
 
-async function createSettlement() {
+async function createSettlement(callback) {
     let settlementCreated;
 
     //get the configs
@@ -252,6 +254,7 @@ async function createSettlement() {
         .then(data=> { 
             //console.log('settlement created: ' + data);
             settlementCreated = data;
+            callback(settlementCreated);
         })
 
     //return the response body as json
