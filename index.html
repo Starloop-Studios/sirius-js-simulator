@@ -292,23 +292,7 @@
             
         }
         
-        /*
-        const updateInventoryControls = async () => {
-            console.log('updateInventoryControls() called');
-            console.log('Latest inventory retrieved');
-            console.log(latestInventoryRetrieved);
-
-            let elem;
-
-            for(i = 0; i < await latestInventoryRetrieved.content.length; i++){
-                elem = document.querySelector('#inventory-'+latestInventoryRetrieved.content[i].balancingContentId);
-                elem.innerHTML = latestInventoryRetrieved.content[i].balancingContentId + ': ' + latestInventoryRetrieved.content[i].quantity;  
-
-            }
-            
-        }*/
-        
-        const monitorBuildingBarracksStatus = async (buildingId, balancingContentId, buildTime) => {
+        const monitorBuildingBarracksStatus = async (buildingId, balancingContentId, buildTime, buttonNumber) => {
             console.log('monitorBuildingBarracksStatus(...) called');
             console.log('buildingId: ' + buildingId);
             console.log('balancingContentId: ' + balancingContentId);
@@ -322,11 +306,12 @@
                 activatedBuilding = await getBuilding(buildingId);
 
                 if(activatedBuilding.status === 'activated') {
-                    buildBarracksActivatedCallback(activatedBuilding);
+                    buildingsCreated.push(activatedBuilding);
+                    sleep(1000);
+                    buildBarracksActivatedCallback(activatedBuilding, buttonNumber);
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
-                    buildingsCreated.push(activatedBuilding);
                     console.log('List of buildings created: ' + JSON.stringify(buildingsCreated));
                     
                     break;
@@ -354,7 +339,6 @@
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
-                    buildingsCreated.push(activatedBuilding);
                     console.log('List of buildings created: ' + JSON.stringify(buildingsCreated));
                     
                     break;
@@ -376,11 +360,12 @@
                 activatedBuilding = await getBuilding(buildingId);
 
                 if(activatedBuilding.status === 'activated') {
+                    buildingsCreated.push(activatedBuilding);
+                    sleep(1000);
                     buildGoldMineActivatedCallback(activatedBuilding);
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
-                    buildingsCreated.push(activatedBuilding);
                     console.log('List of buildings created: ' + JSON.stringify(buildingsCreated));
                     
                     break;
@@ -402,11 +387,12 @@
                 activatedBuilding = await getBuilding(buildingId);
 
                 if(activatedBuilding.status === 'activated') {
+                    buildingsCreated.push(activatedBuilding);
+                    sleep(1000);
                     buildLumberMillActivatedCallback(activatedBuilding);
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
-                    buildingsCreated.push(activatedBuilding);
                     console.log('List of buildings created: ' + JSON.stringify(buildingsCreated));
                     
                     break;
@@ -428,11 +414,12 @@
                 activatedBuilding = await getBuilding(buildingId);
 
                 if(activatedBuilding.status === 'activated') {
+                    buildingsCreated.push(activatedBuilding);
+                    sleep(1000);
                     buildIronMineActivatedCallback(activatedBuilding);
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
-                    buildingsCreated.push(activatedBuilding);
                     console.log('List of buildings created: ' + JSON.stringify(buildingsCreated));
                     
                     break;
@@ -440,7 +427,7 @@
             }
         }
 
-        const startProduction = async (balancingContentId, itemId) => {
+        const startProduction = async (balancingContentId, itemId, buttonNumber) => {
             console.log('startProduction(..) called');
             console.log('production for ' + balancingContentId + ' triggered');
 
@@ -462,15 +449,18 @@
             }
 
             let production = await createProduction(buildingId, itemId, 'start');
-            monitorProductionQuantity(production.id, 1, itemId, balancingContentId); 
+            monitorProductionQuantity(production.id, 1, itemId, balancingContentId, buttonNumber); 
             console.log('production is in progress');
             console.log(production)
 
         }
 
-        const monitorProductionQuantity = async (productionId, secondInterval, produceId, balancingContentId) => {
+        const monitorProductionQuantity = async (productionId, secondInterval, produceId, balancingContentId, buttonNumber) => {
             
             console.log('monitorProductionQuantity(....) called');
+
+            console.log('balancingContentId');
+            console.log(balancingContentId);
 
             while(true){
 
@@ -485,9 +475,10 @@
                     //set the timer 
                     //set the status
                     //enable building button to collect
-                     //call collect
-                     //exit the loop
-                     break;
+                    document.getElementById('build-' + balancingContentId + '-button-' + buttonNumber).disabled = false;
+                    //call collect
+                    //exit the loop
+                    break;
                     
                 }
                 
@@ -751,7 +742,7 @@
 
         }
 
-        const buildBarracksActivatedCallback = async(activatedBarracks)=>{
+        const buildBarracksActivatedCallback = async(activatedBarracks, buttonNumber)=>{
             console.log('buildBarracksActivatedCallback(.) called');
             buildingBarracksStopTimer();
             
@@ -763,7 +754,7 @@
             console.log('Barracks created');
             console.log(activatedBarracks);
 
-            startProduction('barracks', 'soldier');
+            startProduction('barracks', 'soldier', buttonNumber);
             
         }
 
@@ -779,7 +770,7 @@
             console.log('Farm created');
             console.log(activatedFarm);
 
-            startProduction('farm', 'food');
+            startProduction('farm', 'food', buttonNumber);
             
         }
 
@@ -795,7 +786,7 @@
             console.log('Gold Mine created');
             console.log(activatedGoldMine);
 
-            startProduction('gold-mine', 'gold');
+            startProduction('gold-mine', 'gold', buttonNumber);
             
         }
 
@@ -811,7 +802,7 @@
             console.log('Lumber Mill created');
             console.log(activatedLumberMill);
             
-            startProduction('lumber-mill', 'lumber');
+            startProduction('lumber-mill', 'lumber', buttonNumber);
         }
 
         const buildIronMineActivatedCallback = async(activatedIronMine)=>{
@@ -826,7 +817,7 @@
             console.log('Iron mine created');
             console.log(activatedIronMine);
             
-            startProduction('lumber-mill', 'lumber');
+            startProduction('lumber-mill', 'lumber', buttonNumbers);
         }
         
         
