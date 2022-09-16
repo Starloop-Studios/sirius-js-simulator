@@ -342,8 +342,8 @@ async function getBuilding(buildingId) {
 async function createProduction(buildingId, produceId, productionType) {
     console.log('parameters for createProduction(...)');
     console.log('buildingId:  ' + buildingId);
-    console.log('produceId:' + produceId);
-    console.log('productionType:' + productionType);
+    console.log('produceId: ' + produceId);
+    console.log('productionType: ' + productionType);
     
     let productionStarted;
 

@@ -276,19 +276,23 @@
             console.log('retrieveUserInventory() called');
 
             latestInventoryRetrieved = await latestUserInventory(newUserCreated.id, (inventory)=>{
-                
-                if (inventory.content.length === 0) {
-                    console.log('No inventory found for user with id: ' + newUserCreated.id);
-                    console.log(inventory);
-                } else {
+               
+                for( i = 0; i < inventory.content.length; i++){
 
-                    console.log('Latest inventory retrieved');
-                    console.log(inventory);
+                    const inventoryTableRowSelector = '#inventory-'+inventory.content[i].balancingContentId;
+
+                    let elem = document.querySelector(inventoryTableRowSelector);
+                    elem.innerHTML = inventory.content[i].balancingContentId + ': ' + inventory.content[i].quantity;   
+                    
+                
+
                 }
+                
             });
             
         }
         
+        /*
         const updateInventoryControls = async () => {
             console.log('updateInventoryControls() called');
             console.log('Latest inventory retrieved');
@@ -302,7 +306,7 @@
 
             }
             
-        }
+        }*/
         
         const monitorBuildingBarracksStatus = async (buildingId, balancingContentId, buildTime) => {
             console.log('monitorBuildingBarracksStatus(...) called');
@@ -330,7 +334,7 @@
             }
         }
 
-        const monitorBuildingFarmStatus = async (buildingId, balancingContentId, buildTime) => {
+        const monitorBuildingFarmStatus = async (buildingId, balancingContentId, buildTime, buttonNumber) => {
             console.log('monitorBuildingFarmStatus(...) called');
             console.log('buildingId: ' + buildingId);
             console.log('balancingContentId: ' + balancingContentId);
@@ -344,7 +348,9 @@
                 activatedBuilding = await getBuilding(buildingId);
 
                 if(activatedBuilding.status === 'activated') {
-                    buildFarmActivatedCallback(activatedBuilding);
+                    buildingsCreated.push(activatedBuilding);
+                    sleep(1000);
+                    buildFarmActivatedCallback(activatedBuilding, buttonNumber);
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
@@ -441,6 +447,10 @@
             //retrieve the necessary function parameters for starting the production
             let buildingId;
             
+            console.log('buildingsCreated length ' + buildingsCreated.length);
+            console.log('buildingsCreated...')
+            console.log(buildingsCreated);
+
             for (i = 0; i < buildingsCreated.length; i++) {
 
                 if (buildingsCreated[i].balancingContentId === balancingContentId){
@@ -468,8 +478,17 @@
                 
                 let monitoredProduction = await retrieveProduction(productionId);
 
+                console.log('checking if we can collect already...');
+
                 if (monitoredProduction.meta.quantity !== 0) {
-                    document.getElementById('produce-'+balancingContentId+'-button').disabled = false;
+                    console.log('quantity in production is not zero... ready to collect');
+                    //set the timer 
+                    //set the status
+                    //enable building button to collect
+                     //call collect
+                     //exit the loop
+                     break;
+                    
                 }
                 
             }
@@ -486,7 +505,7 @@
             }
         }
 
-        const buildingBarracksStartTimer = (millisecondTick, buildTime) => {
+        const buildingBarracksStartTimer = (millisecondTick, buildTime, buttonNumber) => {
             console.log('buildingBarracksStartTimer(..) called');
             let seconds = buildTime;
             let minutes = 0; 
@@ -505,14 +524,14 @@
                 }
                 
 
-            let elem = document.querySelector('#build-barracks-timer');
+            let elem = document.querySelector('#build-barracks-timer-'+ buttonNumber);
             elem.value = 'hours:'+hours+', minute:'+minutes+', seconds:'+seconds
 
             }, millisecondTick);
             
         }
 
-        const buildingFarmStartTimer = (millisecondTick, buildTime) => {
+        const buildingFarmStartTimer = (millisecondTick, buildTime, buttonNumber) => {
             console.log('buildingFarmStartTimer(..) called');
             let seconds = buildTime; 
             let minutes = 0; 
@@ -531,14 +550,14 @@
                 }
 
 
-            let elem = document.querySelector('#build-farm-timer');
+            let elem = document.querySelector('#build-farm-timer-'+buttonNumber);
             elem.value = 'hours:'+hours+', minute:'+minutes+', seconds:'+seconds
 
             }, millisecondTick);
             
         }
 
-        const buildingGoldMineStartTimer = (millisecondTick, buildTime) => {
+        const buildingGoldMineStartTimer = (millisecondTick, buildTime, buttonNumber) => {
             console.log('buildingGoldMineStartTimer(..) called');
             let seconds = buildTime; 
             let minutes = 0; 
@@ -557,14 +576,14 @@
                 }
 
 
-            let elem = document.querySelector('#build-gold-mine-timer');
+            let elem = document.querySelector('#build-gold-mine-timer-'+ buttonNumber);
             elem.value = 'hours:'+hours+', minute:'+minutes+', seconds:'+seconds
 
             }, millisecondTick);
             
         }
 
-        const buildingLumberMillStartTimer = (millisecondTick, buildTime) => {
+        const buildingLumberMillStartTimer = (millisecondTick, buildTime, buttonNumber) => {
             console.log('buildingLumberMillStartTimer(..) called');
             let seconds = buildTime; 
             let minutes = 0; 
@@ -583,14 +602,14 @@
                 }
 
 
-            let elem = document.querySelector('#build-lumber-mill-timer');
+            let elem = document.querySelector('#build-lumber-mill-timer-'+ buttonNumber);
             elem.value = 'hours:'+hours+', minute:'+minutes+', seconds:'+seconds
 
             }, millisecondTick);
             
         }
 
-        const buildingIronMineStartTimer = (millisecondTick, buildTime) => {
+        const buildingIronMineStartTimer = (millisecondTick, buildTime, buttonNumber) => {
             console.log('buildingIronMineStartTimer(..) called');
             let seconds = buildTime; 
             let minutes = 0; 
@@ -609,7 +628,7 @@
                 }
 
 
-            let elem = document.querySelector('#build-iron-mine-timer');
+            let elem = document.querySelector('#build-iron-mine-timer-'+ buttonNumber);
             elem.value = 'hours:'+hours+', minute:'+minutes+', seconds:'+seconds
 
             }, millisecondTick);
@@ -652,82 +671,91 @@
                 showBuildBuildingsControls();
                 //showProductionControls();
                 //disableProductionButtons();
-                //updateInventoryControls();
-                //showInventoryControls();
+                showInventoryControls();
             });
             
         }
 
-        const buildBarracksHandler = async() =>{
+        const buildBarracksHandler = async(buttonNumber) =>{
             console.log('buildBarracksHandler() called');
-            
-            let elem = document.querySelector('#build-barracks-status');
-            elem.value = 'Building Barracks...';
-            document.getElementById('build-barracks-button').disabled = true;
 
-            buildingBarracksStartTimer(millisecondTickForTimer, barracksBuildTime);
-            const newBarracks = await createBuilding(settlementCreated.id, 'barracks');
-            monitorBuildingBarracksStatus(newBarracks.id, 'barracks', barracksBuildTime);
+            document.getElementById('build-barracks-button-' + buttonNumber).disabled = true;
             
+            let elem = document.querySelector('#build-barracks-status-'+ buttonNumber);
+            elem.value = 'Building Barracks...';
+            
+            const newBarracks = await createBuilding(settlementCreated.id, 'barracks');
+            
+            buildingBarracksStartTimer(millisecondTickForTimer, barracksBuildTime, buttonNumber);
+            monitorBuildingBarracksStatus(newBarracks.id, 'barracks', barracksBuildTime, buttonNumber);
+
         }
 
-        const buildFarmHandler = async() =>{
+        const buildFarmHandler = async(buttonNumber) =>{
             console.log('buildFarmHandler() called');
             
-            let elem = document.querySelector('#build-farm-status');
-            elem.value = 'Building Farm...';
-            document.getElementById('build-farm-button').disabled = true;
+            document.getElementById('build-farm-button-' + buttonNumber).disabled = true;
 
-            buildingFarmStartTimer(millisecondTickForTimer, farmBuildTime);
+            let elem = document.querySelector('#build-farm-status-'+buttonNumber);
+            elem.value = 'Building Farm...';
+                        
             const newFarm = await createBuilding(settlementCreated.id, 'farm');
-            monitorBuildingFarmStatus(newFarm.id, 'farm', farmBuildTime);
             
+            buildingFarmStartTimer(millisecondTickForTimer, farmBuildTime, buttonNumber);
+            monitorBuildingFarmStatus(newFarm.id, 'farm', farmBuildTime, buttonNumber);
+
         }
 
-        const buildGoldMineHandler = async() =>{
+        const buildGoldMineHandler = async(buttonNumber) =>{
             console.log('buildGoldMineHandler() called');
             
-            let elem = document.querySelector('#build-gold-mine-status');
-            elem.value = 'Building Gold Mine...';
-            document.getElementById('build-gold-mine-button').disabled = true;
+            document.getElementById('build-gold-mine-button-' + buttonNumber).disabled = true;
 
-            buildingGoldMineStartTimer(millisecondTickForTimer, goldMineBuiltTime);
+            let elem = document.querySelector('#build-gold-mine-status-'+ buttonNumber);
+            elem.value = 'Building Gold Mine...';
+                        
             const newGoldMine = await createBuilding(settlementCreated.id, 'gold-mine');
-            monitorBuildingGoldMineStatus(newGoldMine.id, 'gold-mine', goldMineBuiltTime);
             
+            buildingGoldMineStartTimer(millisecondTickForTimer, goldMineBuiltTime, buttonNumber);
+            monitorBuildingGoldMineStatus(newGoldMine.id, 'gold-mine', goldMineBuiltTime, buttonNumber);
+        
         }
 
-        const buildLumberMillHandler = async() =>{
+        const buildLumberMillHandler = async(buttonNumber) =>{
             console.log('buildLumberMillHandler() called');
             
-            let elem = document.querySelector('#build-lumber-mill-status');
-            elem.value = 'Building Lumber Mine...';
-            document.getElementById('build-lumber-mill-button').disabled = true;
+            document.getElementById('build-lumber-mill-button-' + buttonNumber).disabled = true;
 
-            buildingLumberMillStartTimer(millisecondTickForTimer, lumberMillBuildTime);
+            let elem = document.querySelector('#build-lumber-mill-status-'+ buttonNumber);
+            elem.value = 'Building Lumber Mine...';
+                        
             const newLumberMill = await createBuilding(settlementCreated.id, 'lumber-mill');
-            monitorBuildingLumberMillStatus(newLumberMill.id, 'lumber-mill', lumberMillBuildTime);
             
+            buildingLumberMillStartTimer(millisecondTickForTimer, lumberMillBuildTime, buttonNumber);
+            monitorBuildingLumberMillStatus(newLumberMill.id, 'lumber-mill', lumberMillBuildTime, buttonNumber);
+
         }
 
-        const buildIronMineHandler = async() =>{
+        const buildIronMineHandler = async(buttonNumber) =>{
             console.log('buildIronMineHandler() called');
             
-            let elem = document.querySelector('#build-iron-mine-status');
-            elem.value = 'Building Iron Mine...';
-            document.getElementById('build-iron-mine-button').disabled = true;
+            document.getElementById('build-iron-mine-button-' + buttonNumber).disabled = true;
 
-            buildingIronMineStartTimer(millisecondTickForTimer, ironMineBuildTime);
+            let elem = document.querySelector('#build-iron-mine-status-'+ buttonNumber);
+            elem.value = 'Building Iron Mine...';
+                        
             const newIronMine = await createBuilding(settlementCreated.id, 'iron-mine');
-            monitorBuildingIronMineStatus(newIronMine.id, 'iron-mine', ironMineBuildTime);
-            
+
+            buildingIronMineStartTimer(millisecondTickForTimer, ironMineBuildTime, buttonNumber);
+            monitorBuildingIronMineStatus(newIronMine.id, 'iron-mine', ironMineBuildTime, buttonNumber);
+
         }
 
         const buildBarracksActivatedCallback = async(activatedBarracks)=>{
             console.log('buildBarracksActivatedCallback(.) called');
             buildingBarracksStopTimer();
             
-            let elem = document.querySelector('#build-barracks-status');
+            let elem = document.querySelector('#build-barracks-status-'+ buttonNumber);
             elem.value = 'Barracks created';
 
             document.getElementById('produce-barracks-button').disabled = false;
@@ -739,11 +767,11 @@
             
         }
 
-        const buildFarmActivatedCallback = async(activatedFarm)=>{
+        const buildFarmActivatedCallback = async(activatedFarm, buttonNumber)=>{
             console.log('buildFarmActivatedCallback(.) called');
             buildingFarmStopTimer();
             
-            let elem = document.querySelector('#build-farm-status');
+            let elem = document.querySelector('#build-farm-status-'+ buttonNumber);
             elem.value = 'Farm created';
 
             document.getElementById('produce-farm-button').disabled = false;
@@ -821,91 +849,91 @@
     <tr id="build-barracks-row-1">
         <td>
             <p>Building Controls</p>
-            <button id="build-barracks-button-1" type="button" onclick="javascript:buildBarracksHandler()">Build Barracks</button>
+            <button id="build-barracks-button-1" type="button" onclick="javascript:buildBarracksHandler(1)">Build Barracks</button>
             <label>Timer </label><input id="build-barracks-timer-1" type="text" disabled=true size="31">
             <label>Status </label><input id="build-barracks-status-1" type="text" disabled=true>
         </td>
     </tr>
     <tr id="build-farm-row-1">
         <td>
-            <button id="build-farm-button-1" type="button" onclick="javascript:buildFarmHandler()">Build Farm</button>
+            <button id="build-farm-button-1" type="button" onclick="javascript:buildFarmHandler(1)">Build Farm</button>
             <label>Timer </label><input id="build-farm-timer-1" type="text" disabled=true size="31">
             <label>Status </label><input id="build-farm-status-1" type="text" disabled=true>
         </td>
     </tr>
     <tr id="build-farm-row-2">
         <td>
-            <button id="build-farm-button-2" type="button" onclick="javascript:buildFarmHandler()">Build Farm</button>
+            <button id="build-farm-button-2" type="button" onclick="javascript:buildFarmHandler(2)">Build Farm</button>
             <label>Timer </label><input id="build-farm-timer-2" type="text" disabled=true size="31">
             <label>Status </label><input id="build-farm-status-2" type="text" disabled=true>
         </td>
     </tr>
     <tr id="build-farm-row-3">
         <td>
-            <button id="build-farm-button-3" type="button" onclick="javascript:buildFarmHandler()">Build Farm</button>
+            <button id="build-farm-button-3" type="button" onclick="javascript:buildFarmHandler(3)">Build Farm</button>
             <label>Timer </label><input id="build-farm-timer-3" type="text" disabled=true size="31">
             <label>Status </label><input id="build-farm-status-3" type="text" disabled=true>
         </td>
     </tr>
     <tr id="build-gold-mine-row-1">
         <td>
-            <button id="build-gold-mine-button-1" type="button" onclick="javascript:buildGoldMineHandler()">Build Gold Mine</button>
+            <button id="build-gold-mine-button-1" type="button" onclick="javascript:buildGoldMineHandler(1)">Build Gold Mine</button>
             <label>Timer </label><input id="build-gold-mine-timer-1" type="text" disabled=true size="31">
             <label>Status </label><input id="build-gold-mine-status-1" type="text" disabled=true>
         </td>
     </tr>
     <tr id="build-gold-mine-row-2">
         <td>
-            <button id="build-gold-mine-button-2" type="button" onclick="javascript:buildGoldMineHandler()">Build Gold Mine</button>
+            <button id="build-gold-mine-button-2" type="button" onclick="javascript:buildGoldMineHandler(2)">Build Gold Mine</button>
             <label>Timer </label><input id="build-gold-mine-timer-2" type="text" disabled=true size="31">
             <label>Status </label><input id="build-gold-mine-status-2" type="text" disabled=true>
         </td>
     </tr>
     <tr id="build-gold-mine-row-3">
         <td>
-            <button id="build-gold-mine-button-3" type="button" onclick="javascript:buildGoldMineHandler()">Build Gold Mine</button>
+            <button id="build-gold-mine-button-3" type="button" onclick="javascript:buildGoldMineHandler(3)">Build Gold Mine</button>
             <label>Timer </label><input id="build-gold-mine-timer-3" type="text" disabled=true size="31">
             <label>Status </label><input id="build-gold-mine-status-3" type="text" disabled=true>
         </td>
     </tr>
     <tr id="build-lumber-mill-row-1">
         <td>
-            <button id="build-lumber-mill-button-1" type="button" onclick="javascript:buildLumberMillHandler()">Build Lumber Mill</button>
+            <button id="build-lumber-mill-button-1" type="button" onclick="javascript:buildLumberMillHandler(1)">Build Lumber Mill</button>
             <label>Timer </label><input id="build-lumber-mill-timer-1" type="text" disabled=true size="31">
             <label>Status </label><input id="build-lumber-mill-status-1" type="text" disabled=true>
         </td>
     </tr>
     <tr id="build-lumber-mill-row-2">
         <td>
-            <button id="build-lumber-mill-button-2" type="button" onclick="javascript:buildLumberMillHandler()">Build Lumber Mill</button>
+            <button id="build-lumber-mill-button-2" type="button" onclick="javascript:buildLumberMillHandler(2)">Build Lumber Mill</button>
             <label>Timer </label><input id="build-lumber-mill-timer-2" type="text" disabled=true size="31">
             <label>Status </label><input id="build-lumber-mill-status-2" type="text" disabled=true>
         </td>
     </tr>
     <tr id="build-lumber-mill-row-3">
         <td>
-            <button id="build-lumber-mill-button-3" type="button" onclick="javascript:buildLumberMillHandler()">Build Lumber Mill</button>
+            <button id="build-lumber-mill-button-3" type="button" onclick="javascript:buildLumberMillHandler(3)">Build Lumber Mill</button>
             <label>Timer </label><input id="build-lumber-mill-timer-3" type="text" disabled=true size="31">
             <label>Status </label><input id="build-lumber-mill-status-3" type="text" disabled=true>
         </td>
     </tr>
     <tr id="build-iron-mine-row-1">
         <td>
-            <button id="build-iron-mine-button-1" type="button" onclick="javascript:buildIronMineHandler()">Build Iron Mine</button>
+            <button id="build-iron-mine-button-1" type="button" onclick="javascript:buildIronMineHandler(1)">Build Iron Mine</button>
             <label>Timer </label><input id="build-iron-mine-timer-1" type="text" disabled=true size="31">
             <label>Status </label><input id="build-iron-mine-status-1" type="text" disabled=true>
         </td>
     </tr>
     <tr id="build-iron-mine-row-2">
         <td>
-            <button id="build-iron-mine-button-2" type="button" onclick="javascript:buildIronMineHandler()">Build Iron Mine</button>
+            <button id="build-iron-mine-button-2" type="button" onclick="javascript:buildIronMineHandler(2)">Build Iron Mine</button>
             <label>Timer </label><input id="build-iron-mine-timer-2" type="text" disabled=true size="31">
             <label>Status </label><input id="build-iron-mine-status-2" type="text" disabled=true>
         </td>
     </tr>
     <tr id="build-iron-mine-row-3">
         <td>
-            <button id="build-iron-mine-button-3" type="button" onclick="javascript:buildIronMineHandler()">Build Iron Mine</button>
+            <button id="build-iron-mine-button-3" type="button" onclick="javascript:buildIronMineHandler(3)">Build Iron Mine</button>
             <label>Timer </label><input id="build-iron-mine-timer-3" type="text" disabled=true size="31">
             <label>Status </label><input id="build-iron-mine-status-3" type="text" disabled=true>
         </td>
