@@ -362,7 +362,7 @@
                 if(activatedBuilding.status === 'activated') {
                     buildingsCreated.push(activatedBuilding);
                     sleep(1000);
-                    buildGoldMineActivatedCallback(activatedBuilding);
+                    buildGoldMineActivatedCallback(activatedBuilding, buttonNumber);
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
@@ -389,7 +389,7 @@
                 if(activatedBuilding.status === 'activated') {
                     buildingsCreated.push(activatedBuilding);
                     sleep(1000);
-                    buildLumberMillActivatedCallback(activatedBuilding);
+                    buildLumberMillActivatedCallback(activatedBuilding, buttonNumber);
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
@@ -416,7 +416,7 @@
                 if(activatedBuilding.status === 'activated') {
                     buildingsCreated.push(activatedBuilding);
                     sleep(1000);
-                    buildIronMineActivatedCallback(activatedBuilding);
+                    buildIronMineActivatedCallback(activatedBuilding, buttonNumber);
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
@@ -459,9 +459,6 @@
             
             console.log('monitorProductionQuantity(....) called');
 
-            console.log('balancingContentId');
-            console.log(balancingContentId);
-
             while(true){
 
                 await sleep(secondInterval + '000')
@@ -474,6 +471,8 @@
                     console.log('quantity in production is not zero... ready to collect');
                     //set the timer 
                     //set the status
+                    let elem = document.querySelector('#build-'+ balancingContentId +'-status-'+ buttonNumber);
+                    elem.value = produceId +' ready for collection';
                     //enable building button to collect
                     document.getElementById('build-' + balancingContentId + '-button-' + buttonNumber).disabled = false;
                     //call collect
@@ -749,7 +748,7 @@
             let elem = document.querySelector('#build-barracks-status-'+ buttonNumber);
             elem.value = 'Barracks created';
 
-            document.getElementById('produce-barracks-button').disabled = false;
+            document.getElementById('build-barracks-button-' + buttonNumber).disabled = false;
 
             console.log('Barracks created');
             console.log(activatedBarracks);
@@ -765,7 +764,7 @@
             let elem = document.querySelector('#build-farm-status-'+ buttonNumber);
             elem.value = 'Farm created';
 
-            document.getElementById('produce-farm-button').disabled = false;
+            document.getElementById('build-farm-button-' + buttonNumber).disabled = false;
 
             console.log('Farm created');
             console.log(activatedFarm);
@@ -774,14 +773,14 @@
             
         }
 
-        const buildGoldMineActivatedCallback = async(activatedGoldMine)=>{
+        const buildGoldMineActivatedCallback = async(activatedGoldMine, buttonNumber)=>{
             console.log('buildGoldMineActivatedCallback(.) called');
             buildingGoldMineStopTimer();
             
-            let elem = document.querySelector('#build-gold-mine-status');
+            let elem = document.querySelector('#build-gold-mine-status-' + buttonNumber);
             elem.value = 'Gold Mine created';
 
-            document.getElementById('produce-gold-mine-button').disabled = false;
+            document.getElementById('build-gold-mine-button-' + buttonNumber).disabled = false;
 
             console.log('Gold Mine created');
             console.log(activatedGoldMine);
@@ -790,14 +789,14 @@
             
         }
 
-        const buildLumberMillActivatedCallback = async(activatedLumberMill)=>{
+        const buildLumberMillActivatedCallback = async(activatedLumberMill, buttonNumber)=>{
             console.log('buildLumberMillActivatedCallback(.) called');
             buildLumberMillStopTimer();
             
-            let elem = document.querySelector('#build-lumber-mill-status');
+            let elem = document.querySelector('#build-lumber-mill-status-'+ buttonNumber);
             elem.value = 'Lumber Mill created';
 
-            document.getElementById('produce-lumber-mill-button').disabled = false;
+            document.getElementById('build-lumber-mill-button-' + buttonNumber).disabled = false;
 
             console.log('Lumber Mill created');
             console.log(activatedLumberMill);
@@ -805,14 +804,14 @@
             startProduction('lumber-mill', 'lumber', buttonNumber);
         }
 
-        const buildIronMineActivatedCallback = async(activatedIronMine)=>{
+        const buildIronMineActivatedCallback = async(activatedIronMine, buttonNumber)=>{
             console.log('buildIronMineActivatedCallback() called');
             buildIronMineStopTimer();
             
-            let elem = document.querySelector('#build-iron-mine-status');
+            let elem = document.querySelector('#build-iron-mine-status-' + buttonNumber);
             elem.value = 'Iron Mine created';
 
-            document.getElementById('produce-iron-mine-button').disabled = false;
+            document.getElementById('build-iron-mine-button-' + buttonNumber).disabled = false;
 
             console.log('Iron mine created');
             console.log(activatedIronMine);
