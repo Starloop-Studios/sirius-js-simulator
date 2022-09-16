@@ -346,7 +346,7 @@
             }
         }
 
-        const monitorBuildingGoldMineStatus = async (buildingId, balancingContentId, buildTime) => {
+        const monitorBuildingGoldMineStatus = async (buildingId, balancingContentId, buildTime, buttonNumber) => {
             console.log('monitorBuildingGoldMineStatus(...) called');
             console.log('buildingId: ' + buildingId);
             console.log('balancingContentId: ' + balancingContentId);
@@ -373,7 +373,7 @@
             }
         }
 
-        const monitorBuildingLumberMillStatus = async (buildingId, balancingContentId, buildTime) => {
+        const monitorBuildingLumberMillStatus = async (buildingId, balancingContentId, buildTime, buttonNumber) => {
             console.log('monitorBuildingLumberMillStatus(...) called');
             console.log('buildingId: ' + buildingId);
             console.log('balancingContentId: ' + balancingContentId);
@@ -400,7 +400,7 @@
             }
         }
         
-        const monitorBuildingIronMineStatus =  async (buildingId, balancingContentId, buildTime) => {
+        const monitorBuildingIronMineStatus =  async (buildingId, balancingContentId, buildTime, buttonNumber) => {
             console.log('monitorBuildingIronMineStatus(...) called');
             console.log('buildingId: ' + buildingId);
             console.log('balancingContentId: ' + balancingContentId);
@@ -467,12 +467,18 @@
 
                 console.log('checking if we can collect already...');
 
-                if (monitoredProduction.meta.quantity !== 0) {
+                console.log('monitoredProduction');
+                console.log(monitoredProduction);
+
+                if (monitoredProduction.meta !== 'undefined' && monitoredProduction.meta.quantity !== 0) {
                     console.log('quantity in production is not zero... ready to collect');
                     //set the timer 
                     //set the status
                     let elem = document.querySelector('#build-'+ balancingContentId +'-status-'+ buttonNumber);
                     elem.value = produceId +' ready for collection';
+                    //change button name to collect XXXX
+                    elem = document.querySelector('#build-' + balancingContentId + '-button-' + buttonNumber);
+                    elem.innerHTML = 'Collect '+ produceId;
                     //enable building button to collect
                     document.getElementById('build-' + balancingContentId + '-button-' + buttonNumber).disabled = false;
                     //call collect
@@ -748,8 +754,6 @@
             let elem = document.querySelector('#build-barracks-status-'+ buttonNumber);
             elem.value = 'Barracks created';
 
-            document.getElementById('build-barracks-button-' + buttonNumber).disabled = false;
-
             console.log('Barracks created');
             console.log(activatedBarracks);
 
@@ -763,8 +767,6 @@
             
             let elem = document.querySelector('#build-farm-status-'+ buttonNumber);
             elem.value = 'Farm created';
-
-            document.getElementById('build-farm-button-' + buttonNumber).disabled = false;
 
             console.log('Farm created');
             console.log(activatedFarm);
@@ -780,8 +782,6 @@
             let elem = document.querySelector('#build-gold-mine-status-' + buttonNumber);
             elem.value = 'Gold Mine created';
 
-            document.getElementById('build-gold-mine-button-' + buttonNumber).disabled = false;
-
             console.log('Gold Mine created');
             console.log(activatedGoldMine);
 
@@ -796,8 +796,6 @@
             let elem = document.querySelector('#build-lumber-mill-status-'+ buttonNumber);
             elem.value = 'Lumber Mill created';
 
-            document.getElementById('build-lumber-mill-button-' + buttonNumber).disabled = false;
-
             console.log('Lumber Mill created');
             console.log(activatedLumberMill);
             
@@ -811,12 +809,10 @@
             let elem = document.querySelector('#build-iron-mine-status-' + buttonNumber);
             elem.value = 'Iron Mine created';
 
-            document.getElementById('build-iron-mine-button-' + buttonNumber).disabled = false;
-
             console.log('Iron mine created');
             console.log(activatedIronMine);
             
-            startProduction('lumber-mill', 'lumber', buttonNumbers);
+            startProduction('iron-mine', 'iron', buttonNumber);
         }
         
         
