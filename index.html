@@ -354,8 +354,6 @@
                     sleep(1000);
                     buildFarmActivatedCallback(activatedBuilding, buttonNumber);
                     eval("farmBuildingIdForCollection" + buttonNumber + "= activatedBuilding.id");
-                    console.log('farmBuildingIdForCollection1: ');
-                    console.log(farmBuildingIdForCollection1);
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
@@ -505,7 +503,17 @@
                     //enable building button to collect
                     document.getElementById('build-' + balancingContentId + '-button-' + buttonNumber).disabled = false;
                     //change button function call to call collect
-                    eval("is"+balancingContentId.charAt(0).toUpperCase()+balancingContentId.substr(1, balancingContentId.length)+"ReadyForCollection"+buttonNumber+ " = true" );
+                    console.log('balancingContentId for dynamic variable: ' + balancingContentId);
+
+                    if (balancingContentId === 'farm') {
+                        eval("is"+balancingContentId.charAt(0).toUpperCase()+balancingContentId.substr(1, balancingContentId.length)+"ReadyForCollection"+buttonNumber+ " = true" );
+                    } else if (balancingContentId === 'gold-mine') {
+                        eval("is"+balancingContentId.charAt(0).toUpperCase()+balancingContentId.substr(1, 3)+balancingContentId.charAt(5).toUpperCase()+balancingContentId.substr(6, 3)+"ReadyForCollection"+buttonNumber+ " = true" );
+                    } else if (balancingContentId === 'lumber-mill') {
+                        eval("is"+balancingContentId.charAt(0).toUpperCase()+balancingContentId.substr(1, 5)+balancingContentId.charAt(7).toUpperCase()+balancingContentId.substr(8, 3)+"ReadyForCollection"+buttonNumber+ " = true" );
+                    } else if (balancingContentId === 'iron-mine') {
+                        eval("is"+balancingContentId.charAt(0).toUpperCase()+balancingContentId.substr(1, 3)+balancingContentId.charAt(5).toUpperCase()+balancingContentId.substr(6, 3)+"ReadyForCollection"+buttonNumber+ " = true" );
+                    }
                     //exit the loop
                     break;
                     
@@ -521,6 +529,8 @@
 
             latestInventoryRetrieved = await latestUserInventory(newUserCreated.id, (inventory)=>{
                 console.log('updating inventory displayed');
+                console.log('inventory:');
+                console.log(inventory);
                 
                 let elem = document.querySelector('#inventory-'+produceId);
                 if(inventory.content.length !== 0) {
@@ -722,7 +732,6 @@
             if (eval('isFarmReadyForCollection'+buttonNumber) !==  true) {
                 console.log('buildFarmHandler() called for building');
 
-
                 document.getElementById('build-farm-button-' + buttonNumber).disabled = true;
 
                 let elem = document.querySelector('#build-farm-status-'+buttonNumber);
@@ -735,54 +744,75 @@
 
             } else {
                 console.log('buildFarmHandler() called for collecting');
-                console.log('farmBuildingIdForCollection: ' + farmBuildingIdForCollection1);
+                console.log('farmBuildingIdForCollection: ' + eval('farmBuildingIdForCollection'+buttonNumber));
                 collect(eval('farmBuildingIdForCollection'+buttonNumber), "food");
             }
             
         }
 
         const buildGoldMineHandler = async(buttonNumber) =>{
-            console.log('buildGoldMineHandler() called');
-            
-            document.getElementById('build-gold-mine-button-' + buttonNumber).disabled = true;
 
-            let elem = document.querySelector('#build-gold-mine-status-'+ buttonNumber);
-            elem.value = 'Building Gold Mine...';
-                        
-            const newGoldMine = await createBuilding(settlementCreated.id, 'gold-mine');
+            if (eval('isGoldMineReadyForCollection'+buttonNumber) !==  true) {
+                console.log('buildGoldMineHandler() called');
             
-            buildingGoldMineStartTimer(millisecondTickForTimer, goldMineBuiltTime, buttonNumber);
-            monitorBuildingGoldMineStatus(newGoldMine.id, 'gold-mine', goldMineBuiltTime, buttonNumber);
+                document.getElementById('build-gold-mine-button-' + buttonNumber).disabled = true;
+
+                let elem = document.querySelector('#build-gold-mine-status-'+ buttonNumber);
+                elem.value = 'Building Gold Mine...';
+                        
+                const newGoldMine = await createBuilding(settlementCreated.id, 'gold-mine');
+            
+                buildingGoldMineStartTimer(millisecondTickForTimer, goldMineBuiltTime, buttonNumber);
+                monitorBuildingGoldMineStatus(newGoldMine.id, 'gold-mine', goldMineBuiltTime, buttonNumber);
+            } else {
+                console.log('buildGoldMineHandler() called for collecting');
+                console.log('goldMineBuildingIdForCollection: ' + eval('goldMineBuildingIdForCollection'+buttonNumber));
+                collect(eval('goldMineBuildingIdForCollection'+buttonNumber), "gold");
+            }
         
         }
 
         const buildLumberMillHandler = async(buttonNumber) =>{
-            console.log('buildLumberMillHandler() called');
+            if (eval('isLumberMillReadyForCollection'+buttonNumber) !==  true) {
+                console.log('buildLumberMillHandler() called');
             
-            document.getElementById('build-lumber-mill-button-' + buttonNumber).disabled = true;
+                document.getElementById('build-lumber-mill-button-' + buttonNumber).disabled = true;
 
-            let elem = document.querySelector('#build-lumber-mill-status-'+ buttonNumber);
-            elem.value = 'Building Lumber Mine...';
+                let elem = document.querySelector('#build-lumber-mill-status-'+ buttonNumber);
+                elem.value = 'Building Lumber Mine...';
                         
-            const newLumberMill = await createBuilding(settlementCreated.id, 'lumber-mill');
+                const newLumberMill = await createBuilding(settlementCreated.id, 'lumber-mill');
             
-            buildingLumberMillStartTimer(millisecondTickForTimer, lumberMillBuildTime, buttonNumber);
-            monitorBuildingLumberMillStatus(newLumberMill.id, 'lumber-mill', lumberMillBuildTime, buttonNumber);
+                buildingLumberMillStartTimer(millisecondTickForTimer, lumberMillBuildTime, buttonNumber);
+                monitorBuildingLumberMillStatus(newLumberMill.id, 'lumber-mill', lumberMillBuildTime, buttonNumber);
+            } else {
+                console.log('buildLumberMillHandler() called for collecting');
+                console.log('lumberMillBuildingIdForCollection: ' + eval('lumberMillBuildingIdForCollection'+buttonNumber));
+                collect(eval('lumberMillBuildingIdForCollection'+buttonNumber), "lumber");
+            }
+            
 
         }
 
         const buildIronMineHandler = async(buttonNumber) =>{
-            console.log('buildIronMineHandler() called');
+            if (eval('isIronMineReadyForCollection'+buttonNumber) !==  true) {
+                console.log('buildIronMineHandler() called');
             
-            document.getElementById('build-iron-mine-button-' + buttonNumber).disabled = true;
+                document.getElementById('build-iron-mine-button-' + buttonNumber).disabled = true;
 
-            let elem = document.querySelector('#build-iron-mine-status-'+ buttonNumber);
-            elem.value = 'Building Iron Mine...';
+                let elem = document.querySelector('#build-iron-mine-status-'+ buttonNumber);
+                elem.value = 'Building Iron Mine...';
                         
-            const newIronMine = await createBuilding(settlementCreated.id, 'iron-mine');
+                const newIronMine = await createBuilding(settlementCreated.id, 'iron-mine');
 
-            buildingIronMineStartTimer(millisecondTickForTimer, ironMineBuildTime, buttonNumber);
-            monitorBuildingIronMineStatus(newIronMine.id, 'iron-mine', ironMineBuildTime, buttonNumber);
+                buildingIronMineStartTimer(millisecondTickForTimer, ironMineBuildTime, buttonNumber);
+                monitorBuildingIronMineStatus(newIronMine.id, 'iron-mine', ironMineBuildTime, buttonNumber);
+            } else {
+                console.log('buildIronMineHandler() called for collecting');
+                console.log('ironMineBuildingIdForCollection: ' + eval('ironMineBuildingIdForCollection'+buttonNumber));
+                collect(eval('ironMineBuildingIdForCollection'+buttonNumber), "iron");
+            }
+            
 
         }
 
