@@ -151,7 +151,7 @@ async function initializeBalancing(){
     return balancing;
 }
 
-async function latestBalancing() {
+async function latestBalancing(callback) {
     let latestBalancing;
 
     //get the configs
@@ -176,24 +176,25 @@ async function latestBalancing() {
         .then(data=> { 
             //console.log('retrieved balancing: ' + data);
             latestBalancing = data;
+            callback(latestBalancing);
         })
 
     //return the response body as json
     return latestBalancing;
 }
 
-async function latestUserInventory(userId){
+async function latestUserInventory(userId, callback){
     let latestInventory;
 
     //get the configs
-    const inventoryForRetrievalFromJSON = JSON.parse(inventoryForRetrievalByAll);
+    const inventoryForRetrievalByAllFromJSON = JSON.parse(inventoryForRetrievalByAll);
 
 
     //construct the complete endpoint url
-    const inventoryForRetrievalFromJSONEndPoint = baseUrlForEndpointsFromJSON.protocol +  
+    const inventoryForRetrievalByAllFromJSONEndPoint = baseUrlForEndpointsFromJSON.protocol +  
         baseUrlForEndpointsFromJSON.host +  
         baseUrlForEndpointsFromJSON.port + 
-        inventoryForRetrievalFromJSON.path +
+        inventoryForRetrievalByAllFromJSON.path +
         '?userId='+userId+'&page=1&size=10000'
 
     //construct the headers, body, and set the method
@@ -201,23 +202,24 @@ async function latestUserInventory(userId){
         headers: {
             'Authorization': 'Bearer ' + bearerToken,
           },
-        method: inventoryForRetrievalFromJSON.method,
+        method: inventoryForRetrievalByAllFromJSON.method,
     }
 
     //call the backend endpoint for creating new user
-    let response = await fetch(inventoryForRetrievalFromJSONEndPoint, requestOptions)
+    let response = await fetch(inventoryForRetrievalByAllFromJSONEndPoint, requestOptions)
         .then(response=>response.json())
         .then(data=> { 
             //console.log('retrieved inventory test...');
             //console.log(data.content);
             latestInventory = data;
+            callback(latestInventory);
         })
 
     //return the response body as json
     return latestInventory;
 }
 
-async function createSettlement() {
+async function createSettlement(callback) {
     let settlementCreated;
 
     //get the configs
@@ -252,6 +254,7 @@ async function createSettlement() {
         .then(data=> { 
             //console.log('settlement created: ' + data);
             settlementCreated = data;
+            callback(settlementCreated);
         })
 
     //return the response body as json
@@ -339,8 +342,8 @@ async function getBuilding(buildingId) {
 async function createProduction(buildingId, produceId, productionType) {
     console.log('parameters for createProduction(...)');
     console.log('buildingId:  ' + buildingId);
-    console.log('produceId:' + produceId);
-    console.log('productionType:' + productionType);
+    console.log('produceId: ' + produceId);
+    console.log('productionType: ' + productionType);
     
     let productionStarted;
 
@@ -447,8 +450,7 @@ async function collectProduction(buildingId) {
     let payload = {
         'type': 'collect',
         'balancingVersion': 0,
-        'buildingId': buildingId,
-        
+        'buildingId': buildingId
     };
 
 
@@ -479,6 +481,4 @@ async function collectProduction(buildingId) {
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
-
 

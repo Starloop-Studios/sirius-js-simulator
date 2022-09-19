@@ -1,8 +1,6 @@
 const baseUrlForEndPoints = '{"protocol":"https://","host":"el0zw5orgg.execute-api.us-east-1.amazonaws.com/dev", "port":""}';
 //const baseUrlForEndPoints = '{"protocol":"http://","host":"localhost", "port":":3000"}';
 
-const defaultDevUser = '{"id":"914c0499-d996-422c-862f-f0ae402bf607", "siriusId": "k7fzy1x2vz", "siriusKey":"6cw26p4m0a40000000000", "username":"SRS_68753909", "appId":"applicationId", "appKey": "applicationKey"}';
-
 const tempAppIdKeyForInitialToken = '{"siriusId": "", "siriusKey":"", "appId":"applicationId", "appKey": "applicationKey"}';
 const tempClientIdKeyForInitialToken = '{"appId":"clientId", "appKey": "clientSecret"}';
 
@@ -29,4 +27,6 @@ const buildingForRetrieval = '{"path":"/api/v1/settlement/buildings", "method":"
 
 const productionForCreation = '{"path":"/api/v1/production", "method":"POST"}';
 const productionForRetrieval = '{"path":"/api/v1/production", "method":"GET"}';
+
+const millisecondTickForTimer = 1000;
 
