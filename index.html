@@ -41,10 +41,26 @@
         let ironMineBuildTime;
 
         let barracksBuildingIdForCollection;
-        let farmBuildingIdForCollection;
+        let farmBuildingIdForCollection1;
+        let farmBuildingIdForCollection2;
+        let farmBuildingIdForCollection3;
         let goldMineBuildingIdForCollection;
         let lumberMillBuildingIdForCollection;
         let ironMineBuildingIdForCollection;
+
+        let isBarracksReadyForCollection = false;
+        let isFarmReadyForCollection1 = false;
+        let isFarmReadyForCollection2 = false;
+        let isFarmReadyForCollection3 = false;
+        let isGoldMineReadyForCollection1 = false;
+        let isGoldMineReadyForCollection2 = false;
+        let isGoldMineReadyForCollection3 = false;
+        let isLumberMillReadyForCollection1 = false;
+        let isLumberMillReadyForCollection2 = false;
+        let isLumberMillReadyForCollection3 = false;
+        let isIronMineReadyForCollection1 = false;
+        let isIronMineReadyForCollection2 = false;
+        let isIronMineReadyForCollection3 = false;
 
         document.addEventListener('DOMContentLoaded', (event) => {
             console.log('DOMContentLoaded event triggered');
@@ -309,6 +325,7 @@
                     buildingsCreated.push(activatedBuilding);
                     sleep(1000);
                     buildBarracksActivatedCallback(activatedBuilding, buttonNumber);
+                    eval("barracksBuildingIdForCollection" + buttonNumber + "= activatedBuilding.id");
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
@@ -336,6 +353,9 @@
                     buildingsCreated.push(activatedBuilding);
                     sleep(1000);
                     buildFarmActivatedCallback(activatedBuilding, buttonNumber);
+                    eval("farmBuildingIdForCollection" + buttonNumber + "= activatedBuilding.id");
+                    console.log('farmBuildingIdForCollection1: ');
+                    console.log(farmBuildingIdForCollection1);
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
@@ -363,6 +383,7 @@
                     buildingsCreated.push(activatedBuilding);
                     sleep(1000);
                     buildGoldMineActivatedCallback(activatedBuilding, buttonNumber);
+                    eval("goldMineBuildingIdForCollection" + buttonNumber + "= activatedBuilding.id");
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
@@ -390,6 +411,7 @@
                     buildingsCreated.push(activatedBuilding);
                     sleep(1000);
                     buildLumberMillActivatedCallback(activatedBuilding, buttonNumber);
+                    eval("lumberMillBuildingIdForCollection" + buttonNumber + "= activatedBuilding.id");
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
@@ -417,6 +439,7 @@
                     buildingsCreated.push(activatedBuilding);
                     sleep(1000);
                     buildIronMineActivatedCallback(activatedBuilding, buttonNumber);
+                    eval("ironMineBuildingIdForCollection" + buttonNumber + "= activatedBuilding.id");
                     console.log('activated building id: ' + activatedBuilding.id);
                     console.log('activated building balancing content id: ' + activatedBuilding.balancingContentId);
                     console.log('activated building status: ' + activatedBuilding.status);
@@ -481,7 +504,8 @@
                     elem.innerHTML = 'Collect '+ produceId;
                     //enable building button to collect
                     document.getElementById('build-' + balancingContentId + '-button-' + buttonNumber).disabled = false;
-                    //call collect
+                    //change button function call to call collect
+
                     //exit the loop
                     break;
                     
@@ -688,17 +712,26 @@
         }
 
         const buildFarmHandler = async(buttonNumber) =>{
-            console.log('buildFarmHandler() called');
             
-            document.getElementById('build-farm-button-' + buttonNumber).disabled = true;
+            if (isFarmReadyForCollection1 !==  true) {
+                console.log('buildFarmHandler() called');
 
-            let elem = document.querySelector('#build-farm-status-'+buttonNumber);
-            elem.value = 'Building Farm...';
-                        
-            const newFarm = await createBuilding(settlementCreated.id, 'farm');
+                document.getElementById('build-farm-button-' + buttonNumber).disabled = true;
+
+                let elem = document.querySelector('#build-farm-status-'+buttonNumber);
+                elem.value = 'Building Farm...';
+                            
+                const newFarm = await createBuilding(settlementCreated.id, 'farm');
+                
+                buildingFarmStartTimer(millisecondTickForTimer, farmBuildTime, buttonNumber);
+                monitorBuildingFarmStatus(newFarm.id, 'farm', farmBuildTime, buttonNumber);
+
+            } else {
+                collect();
+            }
             
-            buildingFarmStartTimer(millisecondTickForTimer, farmBuildTime, buttonNumber);
-            monitorBuildingFarmStatus(newFarm.id, 'farm', farmBuildTime, buttonNumber);
+            
+            
 
         }
 
