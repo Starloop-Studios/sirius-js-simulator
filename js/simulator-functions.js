@@ -450,8 +450,7 @@ async function collectProduction(buildingId) {
     let payload = {
         'type': 'collect',
         'balancingVersion': 0,
-        'buildingId': buildingId,
-        
+        'buildingId': buildingId
     };
 
 

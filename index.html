@@ -505,7 +505,7 @@
                     //enable building button to collect
                     document.getElementById('build-' + balancingContentId + '-button-' + buttonNumber).disabled = false;
                     //change button function call to call collect
-
+                    eval("is"+balancingContentId.charAt(0).toUpperCase()+balancingContentId.substr(1, balancingContentId.length)+"ReadyForCollection"+buttonNumber+ " = true" );
                     //exit the loop
                     break;
                     
@@ -516,13 +516,17 @@
         
         const collect = async (buildingBuildingId, produceId) => {
             console.log('collect(..) called');
+
             let collectedProduction = await collectProduction(buildingBuildingId);
-            latestInventoryRetrieved = await latestUserInventory(newUserCreated.id);
+
+            latestInventoryRetrieved = await latestUserInventory(newUserCreated.id, (inventory)=>{
+                let elem = document.querySelector('#inventory-'+produceId);
+                if(inventory.content.length !== 0) {
+                    elem.innerHTML = produceId + ': ' + inventory.content[0].quantity;  
+                }
+            });
             
-            let elem = document.querySelector('#inventory-'+produceId);
-            if(latestInventoryRetrieved.content.length !== 0) {
-                elem.innerHTML = produceId + ': ' + latestInventoryRetrieved.content[0].quantity;  
-            }
+            
         }
 
         const buildingBarracksStartTimer = (millisecondTick, buildTime, buttonNumber) => {
@@ -714,7 +718,8 @@
         const buildFarmHandler = async(buttonNumber) =>{
             
             if (isFarmReadyForCollection1 !==  true) {
-                console.log('buildFarmHandler() called');
+                console.log('buildFarmHandler() called for building');
+
 
                 document.getElementById('build-farm-button-' + buttonNumber).disabled = true;
 
@@ -727,12 +732,11 @@
                 monitorBuildingFarmStatus(newFarm.id, 'farm', farmBuildTime, buttonNumber);
 
             } else {
-                collect();
+                console.log('buildFarmHandler() called for collecting');
+                console.log('farmBuildingIdForCollection: ' + farmBuildingIdForCollection1);
+                collect(farmBuildingIdForCollection1, "food");
             }
             
-            
-            
-
         }
 
         const buildGoldMineHandler = async(buttonNumber) =>{
