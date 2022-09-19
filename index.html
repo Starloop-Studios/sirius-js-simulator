@@ -520,6 +520,8 @@
             let collectedProduction = await collectProduction(buildingBuildingId);
 
             latestInventoryRetrieved = await latestUserInventory(newUserCreated.id, (inventory)=>{
+                console.log('updating inventory displayed');
+                
                 let elem = document.querySelector('#inventory-'+produceId);
                 if(inventory.content.length !== 0) {
                     elem.innerHTML = produceId + ': ' + inventory.content[0].quantity;  
@@ -717,7 +719,7 @@
 
         const buildFarmHandler = async(buttonNumber) =>{
             
-            if (isFarmReadyForCollection1 !==  true) {
+            if (eval('isFarmReadyForCollection'+buttonNumber) !==  true) {
                 console.log('buildFarmHandler() called for building');
 
 
@@ -734,7 +736,7 @@
             } else {
                 console.log('buildFarmHandler() called for collecting');
                 console.log('farmBuildingIdForCollection: ' + farmBuildingIdForCollection1);
-                collect(farmBuildingIdForCollection1, "food");
+                collect(eval('farmBuildingIdForCollection'+buttonNumber), "food");
             }
             
         }
