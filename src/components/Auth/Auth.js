@@ -54,7 +54,7 @@ const Auth = () => {
   };
   return (
     <div className={Styles.container}>
-      <div className={Styles.body}>Welcome ! Sirirus Zoolana Demo </div>
+      <div className={Styles.body}>Welcome ! Sirirus Zoolana Stimulator </div>
       <div className={Styles.control}>
         <Button onClick={signUp}>Sign Up</Button>
         <Button onClick={logIn}>Log In</Button>
