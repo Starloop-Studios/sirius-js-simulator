@@ -4,10 +4,14 @@ const AuthContext = createContext({
   token: "",
   isLoggedin: false,
   userData: {},
-  setLogIn: () => {},
+  setToken: () => {},
   login: (token) => {},
   // logout: () => {},
   setData: () => {},
+  buildingData: {},
+  setBuildingData: () => {},
+  inventoryData: {},
+  setInventoryData: () => {},
 });
 let timer;
 export const AuthContextProvider = (props) => {
@@ -16,17 +20,14 @@ export const AuthContextProvider = (props) => {
   const [token, setToken] = useState(null);
   const [isLoggedin, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState();
+  const [buildingData, setBuildingData] = useState();
+  const [inventoryData, setInventoryData] = useState();
 
-  const loginHandler = useCallback((token, expirationTime) => {
-    setToken(token);
-    localStorage.setItem("token", token);
-    localStorage.setItem("expirationToken", expirationTime);
-  }, []);
-
-  const setLogIn = (token) => {
+  const loginHandler = useCallback((token) => {
     setToken(token);
     setIsLoggedIn(true);
-  };
+    localStorage.setItem("token", token);
+  }, []);
 
   const setData = useCallback((data) => {
     setUserData(data);
@@ -83,7 +84,11 @@ export const AuthContextProvider = (props) => {
     isLoggedin,
     userData,
     setData,
-    setLogIn,
+    setToken,
+    buildingData,
+    setBuildingData,
+    inventoryData,
+    setInventoryData,
     login: loginHandler,
     // // logout: logoutHandler,
     // setData: setData,

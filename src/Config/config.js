@@ -25,8 +25,10 @@ const userForUpdate = '{"path":"/api/v1/users", "method":"PUT"}';
 const userForRetrieval = '{"path":"/api/v1/users", "method":"GET"}';
 
 const balancingForCreation = '{"path":"/api/v1/balancing", "method":"POST"}';
-const balancingForRetrievalOfLatest =
-  '{"path":"/api/v1/balancing/version/latest", "method":"GET"}';
+const balancingForRetrievalOfLatest = {
+  path: "/api/v1/balancing/version/latest",
+  method: "GET",
+};
 
 const inventoryForRetrievalById =
   '{"path":"/api/v1/inventory", "method":"GET"}';
@@ -47,5 +49,6 @@ const millisecondTickForTimer = 1000;
 module.exports = {
   tempAppIdKeyForInitialToken,
   authenticateForToken,
-  userForCreation
+  userForCreation,
+  balancingForRetrievalOfLatest
 };

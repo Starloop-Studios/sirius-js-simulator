@@ -22,34 +22,21 @@ const Auth = () => {
   const authCtx = useContext(AuthContext);
 
   const signUp = async () => {
-    const tempAppIdKeyForInitialToken = config.tempAppIdKeyForInitialToken;
-    const authenticateForToken = config.authenticateForToken;
     const userForCreation = config.userForCreation;
     let data;
     try {
-      data = await sendRequest(
-        `${process.env.REACT_APP_HOST_URL}${authenticateForToken.path}`,
-        authenticateForToken.method,
-        formBody(tempAppIdKeyForInitialToken),
-        { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" }
-      );
-      authCtx.login(data.accessToken, data.expiresIn);
-
-      if (!data.accessToken) {
-        throw Error("Unable to create user.");
-      }
-
-      let createData = await sendRequest(
+      let data = await sendRequest(
         `${process.env.REACT_APP_HOST_URL}${userForCreation.path}`,
         userForCreation.method,
         null,
-        { Authorization: `Bearer ${data.accessToken}` }
+        { Authorization: `Bearer ${authCtx.token}` }
       );
-      authCtx.setData(createData);
+      authCtx.setData(data);
     } catch (error) {
       console.log(error, isError);
     }
   };
+
   const logIn = async () => {
     const userData = authCtx.userData;
     if (!userData) {
@@ -71,14 +58,14 @@ const Auth = () => {
         formBody(tempAppIdKeyForInitialToken),
         { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" }
       );
-      authCtx.setLogIn(data.accessToken);
+      authCtx.login(data.accessToken);
     } catch (error) {
       console.log(error, isError);
     }
   };
   return (
     <div className={Styles.container}>
-      {/* {isLoading && <Spinner show={isLoading} />} */}
+      {isLoading && <Spinner show={isLoading} />}
       <div className={Styles.body}>Welcome ! Sirirus Zoolana Stimulator </div>
       <div className={Styles.control}>
         <Button onClick={signUp} disabled={!!authCtx.userData}>
