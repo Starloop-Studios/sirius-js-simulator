@@ -5,6 +5,7 @@ import config from "../../Config/config";
 import useHttp from "../../hooks/use-http";
 import Toast from "../UI/Toast";
 import AuthContext from "../../store/auth-context";
+import Spinner from "../UI/Spinner";
 
 function formBody(details) {
   var formBody = [];
@@ -77,6 +78,7 @@ const Auth = () => {
   };
   return (
     <div className={Styles.container}>
+      {/* {isLoading && <Spinner show={isLoading} />} */}
       <div className={Styles.body}>Welcome ! Sirirus Zoolana Stimulator </div>
       <div className={Styles.control}>
         <Button onClick={signUp} disabled={!!authCtx.userData}>
