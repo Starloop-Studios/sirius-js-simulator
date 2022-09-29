@@ -49,19 +49,46 @@ const Auth = () => {
       console.log(error, isError);
     }
   };
-  const logIn = () => {
-    console.log(authCtx.userData);
+  const logIn = async () => {
+    const userData = authCtx.userData;
+    if (!userData) {
+      console.log("No user data present . Please create a user");
+      return;
+    }
+    let tempAppIdKeyForInitialToken = config.tempAppIdKeyForInitialToken;
+    const authenticateForToken = config.authenticateForToken;
+    tempAppIdKeyForInitialToken = {
+      ...tempAppIdKeyForInitialToken,
+      siriusId: userData.siriusId,
+      siriusKey: userData.siriusKey,
+    };
+    let data;
+    try {
+      data = await sendRequest(
+        `${process.env.REACT_APP_HOST_URL}${authenticateForToken.path}`,
+        authenticateForToken.method,
+        formBody(tempAppIdKeyForInitialToken),
+        { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" }
+      );
+      authCtx.setLogIn(data.accessToken);
+    } catch (error) {
+      console.log(error, isError);
+    }
   };
   return (
     <div className={Styles.container}>
       <div className={Styles.body}>Welcome ! Sirirus Zoolana Stimulator </div>
       <div className={Styles.control}>
-        <Button onClick={signUp}>Sign Up</Button>
-        <Button onClick={logIn}>Log In</Button>
+        <Button onClick={signUp} disabled={!!authCtx.userData}>
+          Sign Up
+        </Button>
+        <Button onClick={logIn} disabled={!authCtx.userData}>
+          Log In
+        </Button>
       </div>
       <Toast isError={isError} clearError={clearError} />
-      {authCtx.isLoggedin && (
-        <div>User Creation Sucessful . Log in to continue.</div>
+      {authCtx.userData && (
+        <div>User Creation Sucessfull .Log in to continue.</div>
       )}
     </div>
   );

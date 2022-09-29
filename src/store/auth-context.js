@@ -4,6 +4,7 @@ const AuthContext = createContext({
   token: "",
   isLoggedin: false,
   userData: {},
+  setLogIn: () => {},
   login: (token) => {},
   // logout: () => {},
   setData: () => {},
@@ -18,10 +19,15 @@ export const AuthContextProvider = (props) => {
 
   const loginHandler = useCallback((token, expirationTime) => {
     setToken(token);
-    setIsLoggedIn(true);
     localStorage.setItem("token", token);
     localStorage.setItem("expirationToken", expirationTime);
   }, []);
+
+  const setLogIn = (token) => {
+    setToken(token);
+    setIsLoggedIn(true);
+  };
+
   const setData = useCallback((data) => {
     setUserData(data);
   }, []);
@@ -77,6 +83,7 @@ export const AuthContextProvider = (props) => {
     isLoggedin,
     userData,
     setData,
+    setLogIn,
     login: loginHandler,
     // // logout: logoutHandler,
     // setData: setData,

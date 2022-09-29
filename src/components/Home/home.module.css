@@ -1,0 +1,11 @@
+.container {
+  /* border: 2px solid red; */
+  /* margin-top: 30vh; */
+}
+.head {
+  /* border: 2px solid green; */
+  padding: 5vh;
+  font-size: 2rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+}
