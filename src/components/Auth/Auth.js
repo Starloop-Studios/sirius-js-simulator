@@ -1,6 +1,7 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Styles from "./auth.module.css";
 import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import config from "../../Config/config";
 import useHttp from "../../hooks/use-http";
 import Toast from "../UI/Toast";
@@ -20,18 +21,45 @@ function formBody(details) {
 const Auth = () => {
   const { isLoading, isError, sendRequest, clearError } = useHttp();
   const authCtx = useContext(AuthContext);
+  const [siriusId, setSiriusId] = useState();
+  const [siriusKey, setSiriusKey] = useState();
 
+  const setIntialToken = async () => {
+    console.log("setIntialToken() called !");
+    const tempAppIdKeyForInitialToken = config.tempAppIdKeyForInitialToken;
+    const authenticateForToken = config.authenticateForToken;
+    let data;
+    try {
+      data = await sendRequest(
+        `${process.env.REACT_APP_HOST_URL}${authenticateForToken.path}`,
+        authenticateForToken.method,
+        formBody(tempAppIdKeyForInitialToken),
+        { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" }
+      );
+      console.log("App authenticate Token received .");
+      return data.accessToken;
+    } catch (error) {
+      console.log(error, isError);
+    }
+  };
   const signUp = async () => {
+    console.log("userCreation() called !");
     const userForCreation = config.userForCreation;
+    const intialToken = await setIntialToken();
     let data;
     try {
       let data = await sendRequest(
         `${process.env.REACT_APP_HOST_URL}${userForCreation.path}`,
         userForCreation.method,
         null,
-        { Authorization: `Bearer ${authCtx.token}` }
+        { Authorization: `Bearer ${intialToken}` }
       );
-      authCtx.setData(data);
+      console.log(data, "Created User Data.");
+      authCtx.setUserData({
+        username: data.username,
+        siriusKey: data.siriusKey,
+        siriusId: data.siriusId,
+      });
     } catch (error) {
       console.log(error, isError);
     }
@@ -39,17 +67,25 @@ const Auth = () => {
 
   const logIn = async () => {
     const userData = authCtx.userData;
-    if (!userData) {
-      console.log("No user data present . Please create a user");
-      return;
-    }
     let tempAppIdKeyForInitialToken = config.tempAppIdKeyForInitialToken;
+    if (!userData) {
+      tempAppIdKeyForInitialToken = {
+        ...tempAppIdKeyForInitialToken,
+        siriusId,
+        siriusKey,
+      };
+      console.log(
+        tempAppIdKeyForInitialToken,
+        "No user data present . Logging in with user provided data ."
+      );
+    } else {
+      tempAppIdKeyForInitialToken = {
+        ...tempAppIdKeyForInitialToken,
+        siriusId: userData.siriusId,
+        siriusKey: userData.siriusKey,
+      };
+    }
     const authenticateForToken = config.authenticateForToken;
-    tempAppIdKeyForInitialToken = {
-      ...tempAppIdKeyForInitialToken,
-      siriusId: userData.siriusId,
-      siriusKey: userData.siriusKey,
-    };
     let data;
     try {
       data = await sendRequest(
@@ -68,12 +104,30 @@ const Auth = () => {
       {isLoading && <Spinner show={isLoading} />}
       <div className={Styles.body}>Welcome ! Sirirus Zoolana Stimulator </div>
       <div className={Styles.control}>
-        <Button onClick={signUp} disabled={!!authCtx.userData}>
-          Sign Up
-        </Button>
-        <Button onClick={logIn} disabled={!authCtx.userData}>
-          Log In
-        </Button>
+        <Form>
+          <Form.Group className="mb" controlId="formBasicEmail">
+            <Form.Label>Sirius Id</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Sirius Id"
+              onChange={(event) => {
+                setSiriusId(event.target.value);
+              }}
+            />
+          </Form.Group>
+          <Form.Group className="mb" controlId="formBasicPassword">
+            <Form.Label>Sirius Key</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Sirius Key"
+              onChange={(event) => {
+                setSiriusKey(event.target.value);
+              }}
+            />
+          </Form.Group>
+        </Form>
+        <Button onClick={logIn}>Log In</Button>
+        <Button onClick={signUp}>Sign Up</Button>
       </div>
       <Toast isError={isError} clearError={clearError} />
       {authCtx.userData && (
