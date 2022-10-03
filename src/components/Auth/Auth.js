@@ -55,36 +55,31 @@ const Auth = () => {
         { Authorization: `Bearer ${intialToken}` }
       );
       console.log(data, "Created User Data.");
+      setSiriusId(data.siriusId);
+      setSiriusKey(data.siriusKey);
       authCtx.setUserData({
         username: data.username,
         siriusKey: data.siriusKey,
         siriusId: data.siriusId,
       });
+      await logIn(data.siriusId, data.siriusKey);
     } catch (error) {
       console.log(error, isError);
     }
   };
 
-  const logIn = async () => {
-    const userData = authCtx.userData;
+  const logIn = async (siriusIdL, siriusKeyL) => {
+    console.log("Login() called !");
     let tempAppIdKeyForInitialToken = config.tempAppIdKeyForInitialToken;
-    if (!userData) {
-      tempAppIdKeyForInitialToken = {
-        ...tempAppIdKeyForInitialToken,
-        siriusId,
-        siriusKey,
-      };
-      console.log(
-        tempAppIdKeyForInitialToken,
-        "No user data present . Logging in with user provided data ."
-      );
-    } else {
-      tempAppIdKeyForInitialToken = {
-        ...tempAppIdKeyForInitialToken,
-        siriusId: userData.siriusId,
-        siriusKey: userData.siriusKey,
-      };
-    }
+    tempAppIdKeyForInitialToken = {
+      ...tempAppIdKeyForInitialToken,
+      siriusId: siriusId ? siriusId : siriusIdL,
+      siriusKey: siriusKey ? siriusKey : siriusKeyL,
+    };
+    console.log(
+      tempAppIdKeyForInitialToken,
+      "Logging in with user provided data ."
+    );
     const authenticateForToken = config.authenticateForToken;
     let data;
     try {
@@ -95,6 +90,7 @@ const Auth = () => {
         { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" }
       );
       authCtx.login(data.accessToken);
+      console.log("User loggin Sucessfull.");
     } catch (error) {
       console.log(error, isError);
     }
