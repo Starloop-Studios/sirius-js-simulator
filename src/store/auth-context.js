@@ -1,4 +1,4 @@
-import React, { createContext, useState, useCallback, useEffect } from "react";
+import React, { createContext, useState, useCallback } from "react";
 
 const AuthContext = createContext({
   token: "",
@@ -13,7 +13,6 @@ const AuthContext = createContext({
   inventoryData: {},
   setInventoryData: () => {},
 });
-let timer;
 export const AuthContextProvider = (props) => {
   // const intialToken = localStorage.getItem("token");
   // const intialStudentId = localStorage.getItem("studentId");

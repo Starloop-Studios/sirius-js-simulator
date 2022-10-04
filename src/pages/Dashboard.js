@@ -2,12 +2,15 @@ import { useContext, useEffect, useState } from "react";
 import config from "../Config/config";
 import useHttp from "../hooks/use-http";
 import AuthContext from "../store/auth-context";
+import DataContext from "../store/data-context";
 import Spinner from "../components/UI/Spinner";
 import Home from "../components/Home/Home";
+// import { data } from "../data/intialData";
 
 const Dashboard = () => {
   const { isLoading, isError, sendRequest, clearError } = useHttp();
   const authCtx = useContext(AuthContext);
+  const dataCtx = useContext(DataContext);
   const [balancingData, setBalancingData] = useState(null);
   const setBalancingDataHandler = async () => {
     const balancingForRetrievalOfLatest = config.balancingForRetrievalOfLatest;
@@ -24,6 +27,7 @@ const Dashboard = () => {
           currQuantity: 0,
         };
       });
+      dataCtx.setInitialData(data);
       authCtx.setBuildingData(data.contents.Building);
       authCtx.setInventoryData(data.contents.InventorySeed);
       setBalancingData(data);

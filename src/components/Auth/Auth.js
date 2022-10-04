@@ -46,7 +46,6 @@ const Auth = () => {
     console.log("userCreation() called !");
     const userForCreation = config.userForCreation;
     const intialToken = await setIntialToken();
-    let data;
     try {
       let data = await sendRequest(
         `${process.env.REACT_APP_HOST_URL}${userForCreation.path}`,
