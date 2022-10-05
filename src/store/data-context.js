@@ -5,6 +5,8 @@ const DataContext = createContext({
   buildingData: [],
   setInitialData: () => {},
   setBuildingData: () => {},
+  setInventoryData: () => {},
+  setSettlementId: () => {},
 });
 
 export const DataContextProvider = (props) => {
@@ -15,7 +17,6 @@ export const DataContextProvider = (props) => {
   const [inventoryData, setInventoryData] = useState();
 
   const setData = (data) => {
-    console.log(data);
     const bData = data.contents.Building;
     setInventoryData(data.contents.InventorySeed);
     const array = [];
@@ -24,6 +25,7 @@ export const DataContextProvider = (props) => {
       for (var j = 0; j < Number(bData[i].maxQuantity); j++) {
         let data = {
           id: counter++,
+          nameId: bData[i].id,
           name: bData[i].name,
           buildTime: Number(bData[i].buildTime),
           isBuilding: false,
@@ -36,13 +38,17 @@ export const DataContextProvider = (props) => {
     setBuildingData(array);
   };
 
-
+  const setSettlementId = (id) => {
+    localStorage.setItem("settlementId", id);
+  };
 
   const contextValue = {
     setInitialData: setData,
     buildingData,
     inventoryData,
     setBuildingData,
+    setInventoryData,
+    setSettlementId,
   };
 
   return (

@@ -12,8 +12,6 @@ const ToastComponent = (props) => {
           clearError();
         }}
         animation={true}
-        delay={3000}
-        autohide
         bg="danger"
       >
         <Toast.Header closeButton={true}>

@@ -32,16 +32,18 @@ const balancingForRetrievalOfLatest = {
 
 const inventoryForRetrievalById =
   '{"path":"/api/v1/inventory", "method":"GET"}';
-const inventoryForRetrievalByAll =
-  '{"path":"/api/v1/inventory", "method":"GET"}';
+const inventoryForRetrievalByAll = { path: "/api/v1/inventory", method: "GET" };
 
-const settlementForCreation = '{"path":"/api/v1/settlement", "method":"POST"}';
+const settlementForCreation = { path: "/api/v1/settlement", method: "POST" };
 
-const buildingForCreation = '{"path":"/buildings", "method":"POST"}';
+const buildingForCreation = {
+  path: `/api/v1/settlement/${localStorage.getItem("settlementId")}/buildings`,
+  method: "POST",
+};
 const buildingForRetrieval =
   '{"path":"/api/v1/settlement/buildings", "method":"GET"}';
 
-const productionForCreation = '{"path":"/api/v1/production", "method":"POST"}';
+const productionForCreation = { path: "/api/v1/production", method: "POST" };
 const productionForRetrieval = '{"path":"/api/v1/production", "method":"GET"}';
 
 const millisecondTickForTimer = 1000;
@@ -50,5 +52,9 @@ module.exports = {
   tempAppIdKeyForInitialToken,
   authenticateForToken,
   userForCreation,
-  balancingForRetrievalOfLatest
+  balancingForRetrievalOfLatest,
+  settlementForCreation,
+  buildingForCreation,
+  productionForCreation,
+  inventoryForRetrievalByAll
 };

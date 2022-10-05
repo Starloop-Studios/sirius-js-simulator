@@ -5,6 +5,7 @@ import AuthContext from "../store/auth-context";
 import DataContext from "../store/data-context";
 import Spinner from "../components/UI/Spinner";
 import Home from "../components/Home/Home";
+import Toast from "../components/UI/Toast";
 // import { data } from "../data/intialData";
 
 const Dashboard = () => {
@@ -21,16 +22,24 @@ const Dashboard = () => {
         null,
         { Authorization: `Bearer ${authCtx.token}` }
       );
-      data.contents.Building.forEach((element, index) => {
-        data.contents.Building[index] = {
-          ...data.contents.Building[index],
-          currQuantity: 0,
-        };
-      });
       dataCtx.setInitialData(data);
-      authCtx.setBuildingData(data.contents.Building);
-      authCtx.setInventoryData(data.contents.InventorySeed);
       setBalancingData(data);
+    } catch (error) {
+      console.log(error, isError);
+    }
+  };
+
+  const setSettlementId = async () => {
+    const settlementForCreation = config.settlementForCreation;
+    try {
+      const data = await sendRequest(
+        `${process.env.REACT_APP_HOST_URL}${settlementForCreation.path}`,
+        settlementForCreation.method,
+        null,
+        { Authorization: `Bearer ${authCtx.token}` }
+      );
+      console.log(data);
+      dataCtx.setSettlementId(data.id);
     } catch (error) {
       console.log(error, isError);
     }
@@ -38,11 +47,13 @@ const Dashboard = () => {
 
   useEffect(() => {
     setBalancingDataHandler();
+    setSettlementId();
   }, []);
 
   return (
     <>
       {isLoading && <Spinner show={isLoading} />}
+      <Toast isError={isError} clearError={clearError} />
       <Home balancingData={balancingData} />
     </>
   );
