@@ -107,7 +107,7 @@ const Home = (props) => {
   const addToInventoryHandler = async (itemId) => {
     const userId = authCtx.userData.userId;
     const quantity = 1000;
-    console.log("addToInventoryHandler() called.");
+    console.log(`addToInventoryHandler() called. to add ${itemId}`);
     try {
       const data = await sendRequest(
         `${process.env.REACT_APP_HOST_URL}/api/v1/inventory/operations?userId=${userId}&balancingContentId=${itemId}&opType=increment&quantity=${quantity}`,
@@ -136,7 +136,7 @@ const Home = (props) => {
         <h4>Building Controls </h4>
         {buildingControls && (
           <div className={Styles.controls}>
-            {buildingControls.map((element,index) => (
+            {buildingControls.map((element, index) => (
               <Box
                 data={element}
                 key={index}
@@ -148,7 +148,7 @@ const Home = (props) => {
         <h4>Current Buildings</h4>
         {buildingData && (
           <div className={Styles.build}>
-            {buildingData.map((element,index) => (
+            {buildingData.map((element, index) => (
               <BuildingButton
                 data={element}
                 key={index}

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import config from "../Config/config";
 import useHttp from "../hooks/use-http";
 import AuthContext from "../store/auth-context";
@@ -31,7 +31,7 @@ const Dashboard = () => {
     }
   };
 
-  const getLatestSettlement = async () => {
+  const getLatestSettlement = useCallback(async () => {
     const settlementForRetrieval = config.settlementForRetrieval;
     try {
       const data = await sendRequest(
@@ -50,9 +50,9 @@ const Dashboard = () => {
     } catch (error) {
       console.log(error, isError);
     }
-  };
+  }, [authCtx.buildingData]);
 
-  const getLatestInventory = async () => {
+  const getLatestInventory = useCallback(async () => {
     const inventoryForRetrievalByAll = config.inventoryForRetrievalByAll;
     try {
       const data = await sendRequest(
@@ -68,7 +68,7 @@ const Dashboard = () => {
     } catch (error) {
       console.log(error, isError);
     }
-  };
+  }, [authCtx.inventoryData]);
 
   useEffect(() => {
     setBalancingDataHandler();
