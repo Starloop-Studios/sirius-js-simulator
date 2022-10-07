@@ -5,6 +5,7 @@ import Spinner from "react-bootstrap/Spinner";
 
 const Inventory = (props) => {
   const { inventoryData, addToInventoryHandler, isLoading } = props;
+  console.log(inventoryData);
   return (
     <div>
       {inventoryData && (

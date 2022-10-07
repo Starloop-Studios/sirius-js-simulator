@@ -31,7 +31,7 @@ export const DataContextProvider = (props) => {
   const [currProduce, setCurrentProduce] = useState("none");
 
   const setData = (data) => {
-    setInventoryData(data.contents.InventorySeed);
+    // setInventoryData(data.contents.InventorySeed);
     setCombatUnitData(data.contents.CombatUnit);
     // const array = [];
     // let counter = 1;
