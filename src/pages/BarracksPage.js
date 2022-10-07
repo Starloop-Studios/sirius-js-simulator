@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import Barracks from "../components/Barracks/Barracks";
-import { queue } from "../data/intialData";
+// import { queue } from "../data/intialData";
 import config from "../Config/config";
 import useHttp from "../hooks/use-http";
 import AuthContext from "../store/auth-context";

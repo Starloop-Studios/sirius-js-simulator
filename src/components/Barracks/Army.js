@@ -1,5 +1,5 @@
 import React from "react";
-import { data } from "../../data/intialData";
+// import { data } from "../../data/intialData";
 import Styles from "./Barracks.module.css";
 import BuildingButton from "./BuildingButton";
 const Army = (props) => {
