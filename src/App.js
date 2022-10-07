@@ -5,9 +5,9 @@ import DataContext from "./store/data-context";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Home from "./components/Home/Home";
-import { Routes, Route, Redirect } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Barracks from "./pages/BarracksPage";
-import { data } from "./data/intialData";
+// import { data } from "./data/intialData";
 function App() {
   const authCtx = useContext(AuthContext);
 
