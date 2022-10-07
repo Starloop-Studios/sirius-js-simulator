@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Styles from "./auth.module.css";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -67,6 +67,23 @@ const Auth = () => {
     }
   };
 
+  const getCurrentUser = async (token) => {
+    console.log("GetCurrentUser() called.");
+    const authenticateForInfo = config.authenticateForInfo;
+    try {
+      const data = await sendRequest(
+        `${process.env.REACT_APP_HOST_URL}${authenticateForInfo.path}`,
+        authenticateForInfo.method,
+        null,
+        { Authorization: `Bearer ${token}` }
+      );
+      authCtx.setUserData({ userId: data.id, siriusId: data.siriusId });
+      console.log("Current user data set authctx");
+    } catch (error) {
+      console.log(error, isError);
+    }
+  };
+
   const logIn = async (siriusIdL, siriusKeyL) => {
     console.log("Login() called !");
     let tempAppIdKeyForInitialToken = config.tempAppIdKeyForInitialToken;
@@ -89,11 +106,13 @@ const Auth = () => {
         { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" }
       );
       authCtx.login(data.accessToken);
+      await getCurrentUser(data.accessToken);
       console.log("User loggin Sucessfull.");
     } catch (error) {
       console.log(error, isError);
     }
   };
+
   return (
     <div className={Styles.container}>
       {isLoading && <Spinner show={isLoading} />}

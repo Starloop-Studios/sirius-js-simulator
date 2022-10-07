@@ -13,6 +13,7 @@ const Dashboard = () => {
   const authCtx = useContext(AuthContext);
   const dataCtx = useContext(DataContext);
   const [balancingData, setBalancingData] = useState(null);
+
   const setBalancingDataHandler = async () => {
     const balancingForRetrievalOfLatest = config.balancingForRetrievalOfLatest;
     try {
@@ -22,6 +23,7 @@ const Dashboard = () => {
         null,
         { Authorization: `Bearer ${authCtx.token}` }
       );
+      dataCtx.setBuildingControls(data.contents.Building);
       dataCtx.setInitialData(data);
       setBalancingData(data);
     } catch (error) {
@@ -29,17 +31,40 @@ const Dashboard = () => {
     }
   };
 
-  const setSettlementId = async () => {
-    const settlementForCreation = config.settlementForCreation;
+  const getLatestSettlement = async () => {
+    const settlementForRetrieval = config.settlementForRetrieval;
     try {
       const data = await sendRequest(
-        `${process.env.REACT_APP_HOST_URL}${settlementForCreation.path}`,
-        settlementForCreation.method,
+        `${process.env.REACT_APP_HOST_URL}${settlementForRetrieval.path}`,
+        settlementForRetrieval.method,
         null,
         { Authorization: `Bearer ${authCtx.token}` }
       );
-      console.log(data);
-      dataCtx.setSettlementId(data.id);
+      console.log("Latest Settlement loaded .", data);
+      if (!data.content.length || !data.content[0].buildings.length) {
+        console.log("No building Data.");
+        return;
+      }
+      dataCtx.setSettlementId(data.content[0].id);
+      dataCtx.setBuildingData(data.content[0].buildings);
+    } catch (error) {
+      console.log(error, isError);
+    }
+  };
+
+  const getLatestInventory = async () => {
+    const inventoryForRetrievalByAll = config.inventoryForRetrievalByAll;
+    try {
+      const data = await sendRequest(
+        `${process.env.REACT_APP_HOST_URL}${inventoryForRetrievalByAll.path}`,
+        inventoryForRetrievalByAll.method,
+        null,
+        {
+          Authorization: `Bearer ${authCtx.token}`,
+        }
+      );
+      console.log("Inventory Data recevied.", data);
+      dataCtx.setInventoryData(data.content);
     } catch (error) {
       console.log(error, isError);
     }
@@ -47,14 +72,18 @@ const Dashboard = () => {
 
   useEffect(() => {
     setBalancingDataHandler();
-    setSettlementId();
+    getLatestSettlement();
+    getLatestInventory();
   }, []);
 
   return (
     <>
-      {isLoading && <Spinner show={isLoading} />}
       <Toast isError={isError} clearError={clearError} />
-      <Home balancingData={balancingData} />
+      <Home
+        balancingData={balancingData}
+        getLatestSettlement={getLatestSettlement}
+        getLatestInventory={getLatestInventory}
+      />
     </>
   );
 };

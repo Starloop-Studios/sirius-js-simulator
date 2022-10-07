@@ -3,6 +3,7 @@ import React, { createContext, useState, useCallback } from "react";
 const AuthContext = createContext({
   token: "",
   isLoggedin: false,
+  barrackFlag: false,
   userData: {},
   setToken: () => {},
   login: (token) => {},
@@ -12,6 +13,7 @@ const AuthContext = createContext({
   setBuildingData: () => {},
   inventoryData: {},
   setInventoryData: () => {},
+  setBarrackFlag: () => {},
 });
 export const AuthContextProvider = (props) => {
   // const intialToken = localStorage.getItem("token");
@@ -21,6 +23,7 @@ export const AuthContextProvider = (props) => {
   const [userData, setUserData] = useState();
   const [buildingData, setBuildingData] = useState();
   const [inventoryData, setInventoryData] = useState();
+  const [barrackFlag, setBarrackFlag] = useState(false);
 
   const loginHandler = useCallback((token) => {
     setToken(token);
@@ -84,6 +87,8 @@ export const AuthContextProvider = (props) => {
     setBuildingData,
     inventoryData,
     setInventoryData,
+    setBarrackFlag,
+    barrackFlag,
     login: loginHandler,
     // // logout: logoutHandler,
     // setData: setData,

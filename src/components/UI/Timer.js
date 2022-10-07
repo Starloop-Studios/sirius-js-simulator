@@ -1,12 +1,8 @@
-import React, { useEffect, useState, useContext } from "react";
-import DataContext from "../../store/data-context";
+import React, { useEffect, useState } from "react";
 const Timer = (props) => {
-  const { startTime, id, checkBuildFinishHandler } = props;
-  const dataCtx = useContext(DataContext);
+  const { startTime } = props;
   const [timer, setTimer] = useState(startTime);
-  if (timer === 0) {
-    checkBuildFinishHandler(id);
-  }
+
   useEffect(() => {
     const data = setInterval(() => {
       if (timer === 0) {
@@ -19,6 +15,7 @@ const Timer = (props) => {
       clearTimeout(data);
     };
   }, [timer]);
+
   return <div>{timer}</div>;
 };
 
