@@ -129,7 +129,7 @@ const Home = (props) => {
       <Toast isError={isError} clearError={clearError} />
       {userData && (
         <div className={Styles.head}>
-          Welcome {userData.username}, to the sirirus zoolana stimulator.
+          Welcome {userData.username}, to the sirirus zoolana simulator.
         </div>
       )}
       <div className={Styles.content}>
