@@ -69,15 +69,20 @@ const Auth = () => {
 
   const getCurrentUser = async (token) => {
     console.log("GetCurrentUser() called.");
-    const authenticateForInfo = config.authenticateForInfo;
+    const getCurrentIUserInfo = config.getCurrentIUserInfo;
     try {
       const data = await sendRequest(
-        `${process.env.REACT_APP_HOST_URL}${authenticateForInfo.path}`,
-        authenticateForInfo.method,
+        `${process.env.REACT_APP_HOST_URL}${getCurrentIUserInfo.path}`,
+        getCurrentIUserInfo.method,
         null,
         { Authorization: `Bearer ${token}` }
       );
-      authCtx.setUserData({ userId: data.id, siriusId: data.siriusId });
+      authCtx.setUserData({
+        userId: data.id,
+        siriusId: data.siriusId,
+        siriusKey: data.siriusKey,
+        username: data.username,
+      });
       console.log("Current user data set authctx");
     } catch (error) {
       console.log(error, isError);
@@ -116,7 +121,7 @@ const Auth = () => {
   return (
     <div className={Styles.container}>
       {isLoading && <Spinner show={isLoading} />}
-      <div className={Styles.body}>Welcome ! Sirirus Zoolana Stimulator </div>
+      <div className={Styles.body}>Welcome ! Sirirus Zoolana Simulator </div>
       <div className={Styles.control}>
         <Form>
           <Form.Group className="mb" controlId="formBasicEmail">

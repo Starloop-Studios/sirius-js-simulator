@@ -3,9 +3,11 @@ import { useCallback, useState } from "react";
 const useHttp = () => {
   const [isLoading, setIsLoading] = useState();
   const [isError, setIsError] = useState();
+
   const clearError = useCallback(() => {
     setIsError(null);
   }, []);
+  
   const sendRequest = useCallback(
     async (url, method = "GET", body = null, headers = {}) => {
       try {

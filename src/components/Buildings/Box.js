@@ -8,6 +8,25 @@ const Box = (props) => {
   return (
     <div className={Styles.container}>
       <div className={Styles.name}>{data.name}</div>
+      <div className={Styles.content}>
+        <div className={Styles.title}>Build Time </div>
+        <div>:</div>
+        <div className={Styles.main}>{data.buildTime} s</div>
+
+        <div className={Styles.title}>Maximum Quantity</div>
+        <div>:</div>
+        <div className={Styles.main}>{data.maxQuantity}</div>
+
+        <div className={Styles.title}>Resource</div>
+        <div>:</div>
+        <div className={Styles.main}>
+          {data.cost.map((ele, index) => (
+            <span key={index}>
+              {ele.resource}({ele.resourceQuantity}){" "}
+            </span>
+          ))}
+        </div>
+      </div>
       <div className={Styles.controls}>
         {!data.build && (
           <Button
@@ -18,17 +37,6 @@ const Box = (props) => {
             }}
           >
             {data.isBuilding ? "Building..." : "Build"}
-          </Button>
-        )}
-        {data.build && (
-          <Button
-            variant="success"
-            size="sm"
-            onClick={() => {
-              collectHandler(data.id, data.nameId);
-            }}
-          >
-            Collect
           </Button>
         )}
       </div>

@@ -8,6 +8,7 @@ const DataContext = createContext({
   armyData: [],
   armyQueue: [],
   currProduce: "none",
+  balancingData :{},
   setBuildingControls: () => {},
   setInitialData: () => {},
   setBuildingData: () => {},
@@ -16,6 +17,7 @@ const DataContext = createContext({
   setArmyQueue: () => {},
   setArmyData: () => {},
   setCurrentProduce: () => {},
+  setBalancingData:()=>{}
 });
 
 export const DataContextProvider = (props) => {
@@ -29,6 +31,7 @@ export const DataContextProvider = (props) => {
   const [armyData, setArmyData] = useState();
   const [armyQueue, setArmyQueue] = useState();
   const [currProduce, setCurrentProduce] = useState("none");
+  const [balancingData, setBalancingData] = useState({});
 
   const setData = (data) => {
     // setInventoryData(data.contents.InventorySeed);
@@ -65,6 +68,8 @@ export const DataContextProvider = (props) => {
   };
 
   const contextValue = {
+    setBalancingData,
+    balancingData,
     setInitialData: setData,
     buildingControls,
     buildingData,

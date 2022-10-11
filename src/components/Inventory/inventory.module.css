@@ -1,3 +1,10 @@
+.container {
+  border: 2px solid rgb(14, 13, 13);
+  border-radius: 5px;
+  width: 30%;
+  margin: auto;
+  margin-top: 5vh;
+}
 .name {
   border-bottom: 2px solid black;
   padding: 10px;

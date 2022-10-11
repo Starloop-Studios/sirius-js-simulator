@@ -18,6 +18,7 @@ const authenticateForToken = { path: "/auth/token", method: "POST" };
 // const authenticateForAuthorize = '{"path":"/auth/authorize", "method":"GET"}';
 // const authenticateForVerify = '{"path":"/auth/verify", "method":"GET"}';
 const authenticateForInfo = { path: "/auth/info", method: "GET" };
+const getCurrentIUserInfo = { path: "/api/v1/users/me", method: "GET" };
 
 const userForCreation = { path: "/api/v1/users", method: "POST" };
 // const userForCollection = '{"path":"/api/v1/users", "method":"GET"}';
@@ -62,4 +63,5 @@ module.exports = {
   authenticateForInfo,
   armyForRetrieval,
   settlementForRetrieval,
+  getCurrentIUserInfo
 };

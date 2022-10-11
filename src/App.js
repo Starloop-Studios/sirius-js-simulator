@@ -1,13 +1,11 @@
 import "./App.css";
 import { useContext, useEffect } from "react";
 import AuthContext from "./store/auth-context";
-import DataContext from "./store/data-context";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
-import Home from "./components/Home/Home";
 import { Routes, Route } from "react-router-dom";
 import Barracks from "./pages/BarracksPage";
-// import { data } from "./data/intialData";
+
 function App() {
   const authCtx = useContext(AuthContext);
 
@@ -32,7 +30,8 @@ function App() {
       </Routes>
       {/* {!authCtx.isLoggedin && <Auth />}
       {authCtx.isLoggedin && <Dashboard />} */}
-      {/* <Barracks /> */}
+      {/* <Barracks />
+      {/* <User/> */}
     </div>
   );
 }

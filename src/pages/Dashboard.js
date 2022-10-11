@@ -4,15 +4,17 @@ import useHttp from "../hooks/use-http";
 import AuthContext from "../store/auth-context";
 import DataContext from "../store/data-context";
 import Spinner from "../components/UI/Spinner";
-import Home from "../components/Home/Home";
 import Toast from "../components/UI/Toast";
-// import { data } from "../data/intialData";
+import User from "../components/User/User";
+import Building from "../components/Buildings/Building";
+import Inventory from "../components/Inventory/Inventory";
 
 const Dashboard = () => {
   const { isLoading, isError, sendRequest, clearError } = useHttp();
   const authCtx = useContext(AuthContext);
   const dataCtx = useContext(DataContext);
-  const [balancingData, setBalancingData] = useState(null);
+  const [inventoryData, setInventoryData] = useState(null);
+  const [buildingData, setBuildingData] = useState([]);
 
   const setBalancingDataHandler = async () => {
     const balancingForRetrievalOfLatest = config.balancingForRetrievalOfLatest;
@@ -23,9 +25,7 @@ const Dashboard = () => {
         null,
         { Authorization: `Bearer ${authCtx.token}` }
       );
-      dataCtx.setBuildingControls(data.contents.Building);
-      dataCtx.setInitialData(data);
-      setBalancingData(data);
+      dataCtx.setBalancingData(data.contents);
     } catch (error) {
       console.log(error, isError);
     }
@@ -45,12 +45,12 @@ const Dashboard = () => {
         console.log("No building Data.");
         return;
       }
+      setBuildingData(data.content[0].buildings);
       dataCtx.setSettlementId(data.content[0].id);
-      dataCtx.setBuildingData(data.content[0].buildings);
     } catch (error) {
       console.log(error, isError);
     }
-  }, [authCtx.buildingData]);
+  }, [buildingData]);
 
   const getLatestInventory = useCallback(async () => {
     const inventoryForRetrievalByAll = config.inventoryForRetrievalByAll;
@@ -64,11 +64,12 @@ const Dashboard = () => {
         }
       );
       console.log("Inventory Data recevied.", data);
-      dataCtx.setInventoryData(data.content);
+      setInventoryData(data.content);
+      // dataCtx.setInventoryData(data.content);
     } catch (error) {
       console.log(error, isError);
     }
-  }, [authCtx.inventoryData]);
+  }, [inventoryData]);
 
   useEffect(() => {
     setBalancingDataHandler();
@@ -78,12 +79,24 @@ const Dashboard = () => {
 
   return (
     <>
+    <h3>Welcome to Sirirus-Zoolana Simulator</h3>
       <Toast isError={isError} clearError={clearError} />
-      <Home
-        balancingData={balancingData}
-        getLatestSettlement={getLatestSettlement}
-        getLatestInventory={getLatestInventory}
-      />
+      {isLoading && <Spinner show={isLoading} />}
+      {authCtx.userData && <User />}
+      {buildingData && (
+        <Building
+          buildingData={buildingData}
+          setBuildingData={setBuildingData}
+          getLatestSettlement={getLatestSettlement}
+          getLatestInventory={getLatestInventory}
+        />
+      )}
+      {inventoryData && (
+        <Inventory
+          inventoryData={inventoryData}
+          getLatestInventory={getLatestInventory}
+        />
+      )}
     </>
   );
 };
