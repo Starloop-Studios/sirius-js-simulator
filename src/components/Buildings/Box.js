@@ -13,7 +13,7 @@ const Box = (props) => {
         <div>:</div>
         <div className={Styles.main}>{data.buildTime} s</div>
 
-        <div className={Styles.title}>Maximum Quantity</div>
+        <div className={Styles.title}>Max Quantity</div>
         <div>:</div>
         <div className={Styles.main}>{data.maxQuantity}</div>
 

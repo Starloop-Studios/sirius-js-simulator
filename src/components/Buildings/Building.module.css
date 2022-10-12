@@ -2,20 +2,14 @@
   border: 2px solid red;
 }
 .controls {
-  display: flex;
-  justify-content: space-evenly;
-  margin-bottom: 20px;
+  /* border: 2px solid red; */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  padding: 10px;
 }
 .content {
   /* border: 2px solid blue; */
   padding: 10px;
   height: fit-content;
-}
-.build {
-  /* border: 2px solid green; */
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 10px;
-  padding: 10px;
 }

@@ -45,7 +45,15 @@ const Dashboard = () => {
         console.log("No building Data.");
         return;
       }
-      setBuildingData(data.content[0].buildings);
+      setBuildingData(
+        data.content[0].buildings.sort((a, b) => {
+          const nameA = a.balancingContentId;
+          const nameB = b.balancingContentId;
+          if (nameA < nameB) return -1;
+          if (nameA > nameB) return 1;
+          return 0;
+        })
+      );
       dataCtx.setSettlementId(data.content[0].id);
     } catch (error) {
       console.log(error, isError);
@@ -79,7 +87,7 @@ const Dashboard = () => {
 
   return (
     <>
-    <h3>Welcome to Sirirus-Zoolana Simulator</h3>
+      <h3>Welcome to Sirirus-Zoolana Simulator</h3>
       <Toast isError={isError} clearError={clearError} />
       {isLoading && <Spinner show={isLoading} />}
       {authCtx.userData && <User />}

@@ -52,7 +52,7 @@ const BuildingButton = (props) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (data.status === "activated" && produce <= buildingCapacity.capacity) {
+      if (data.status === "activated" && produce < buildingCapacity.capacity) {
         getLatestProduction();
       }
     }, buildingCapacity.cycleTime * 1000);
@@ -124,18 +124,20 @@ const BuildingButton = (props) => {
         <div className={Styles.main}>{isLoading ? "..." : produce}</div>
       </div>
 
-      <div className={Styles.controls}>
-        <Button
-          onClick={() => {
-            setProduce(0);
-            collectHandler(data.id, data.balancingContentId);
-          }}
-          variant="success"
-          disabled={data.status === "activated" ? false : true}
-        >
-          {controlName}
-        </Button>
-      </div>
+      {data.status !== "pending" && (
+        <div className={Styles.controls}>
+          <Button
+            onClick={() => {
+              setProduce(0);
+              collectHandler(data.id, data.balancingContentId);
+            }}
+            variant="success"
+            disabled={data.status === "activated" ? false : true}
+          >
+            {controlName}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

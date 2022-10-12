@@ -123,36 +123,37 @@ const Building = (props) => {
       <h4>Building Controls </h4>
       {buildingControls && (
         <div className={Styles.controls}>
-          {buildingControls.map((element, index) => {
+          {buildingControls.map((control, index) => {
+            const newBuidlingArray = buildingData.filter(
+              (build) => build.balancingContentId === control.id
+            );
+            console.log(newBuidlingArray);
             const cost = buildingCost.filter(
               (building) =>
-                building.buildingId === element.id && building.level === 1
+                building.buildingId === control.id && building.level === 1
             );
             const dataObject = {
-              ...element,
+              ...control,
               cost: cost,
             };
             return (
-              <Box
-                data={dataObject}
-                key={index}
-                startBuildHandler={startBuildHandler}
-              ></Box>
+              <div className={Styles.build}>
+                <Box
+                  data={dataObject}
+                  key={index}
+                  startBuildHandler={startBuildHandler}
+                ></Box>
+                {newBuidlingArray.map((ele, index) => (
+                  <BuildingButton
+                    data={ele}
+                    key={index}
+                    checkBuildFinishHandler={checkBuildFinishHandler}
+                    collectHandler={collectHandler}
+                  ></BuildingButton>
+                ))}
+              </div>
             );
           })}
-        </div>
-      )}
-      <h4>Current Buildings</h4>
-      {buildingData && (
-        <div className={Styles.build}>
-          {buildingData.map((element, index) => (
-            <BuildingButton
-              data={element}
-              key={index}
-              checkBuildFinishHandler={checkBuildFinishHandler}
-              collectHandler={collectHandler}
-            ></BuildingButton>
-          ))}
         </div>
       )}
       {buildingData && !buildingData.length && (
