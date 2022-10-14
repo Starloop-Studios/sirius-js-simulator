@@ -18,7 +18,7 @@ const Timer = (props) => {
     };
   }, [timer]);
 
-  return <div>{timer}</div>;
+  return <div>{timer} S</div>;
 };
 
 export default Timer;

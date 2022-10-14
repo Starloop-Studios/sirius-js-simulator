@@ -18,17 +18,6 @@ const ArmyButton = (props) => {
     <div className={Styles.container}>
       <div className={Styles.name}>{data.balancingContentId}</div>
       <div className={Styles.name}>{data.quantity}</div>
-      {/* {dataCtx.currProduce === data.balancingContentId && (
-        <div className={Styles.timer}>
-          Produce Finishes in{" "}
-          <Timer
-            startTime={produceTime}
-            checkBuildFinishHandler={checkProduceFinishHandler}
-            type={data.balancingContentId}
-          />{" "}
-          seconds .
-        </div>
-      )} */}
     </div>
   );
 };

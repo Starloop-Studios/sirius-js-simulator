@@ -1,28 +1,22 @@
-import React from "react";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import React, { Fragment } from "react";
+import ReactDOM from "react-dom";
+import styles from "./Spinner.module.css";
 import Spinner from "react-bootstrap/Spinner";
+const Backdrop = (props) => {
+  return <div className={styles.backdrop}>{props.children}</div>;
+};
+
 const spinner = (props) => {
+  const portalElement = document.getElementById("overlays");
   return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-      scrollable={false}
-    >
-      {" "}
-      <Button variant="primary" disabled size="sm">
-        <Spinner
-          as="span"
-          animation="grow"
-          size="sm"
-          role="status"
-          aria-hidden="true"
-        />
-        &nbsp;Loading...
-      </Button>
-    </Modal>
+    <Fragment>
+      {ReactDOM.createPortal(
+        <Backdrop>
+          <Spinner animation="border" variant="primary" />
+        </Backdrop>,
+        portalElement
+      )}
+    </Fragment>
   );
 };
 

@@ -22,6 +22,7 @@ const Building = (props) => {
     setBuildingData,
     getLatestSettlement,
     getLatestInventory,
+    setBarrackId
   } = props;
   const buildingControls = dataCtx.balancingData.Building;
   const buildingCost = dataCtx.balancingData.BuildingCost;
@@ -89,6 +90,7 @@ const Building = (props) => {
   const collectHandler = async (id, type) => {
     if (type === "barracks") {
       console.log("Enter to the barracks called .");
+      setBarrackId(id);
       // navigate("/barracks", { state: { buildingId: id } });
       return;
     }
@@ -127,7 +129,6 @@ const Building = (props) => {
             const newBuidlingArray = buildingData.filter(
               (build) => build.balancingContentId === control.id
             );
-            console.log(newBuidlingArray);
             const cost = buildingCost.filter(
               (building) =>
                 building.buildingId === control.id && building.level === 1

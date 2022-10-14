@@ -16,7 +16,7 @@ function App() {
 
   return (
     <div className="App">
-      <Routes>
+      {/* <Routes>
         <Route
           path="/"
           element={authCtx.isLoggedin ? <Dashboard /> : <Auth />}
@@ -27,9 +27,9 @@ function App() {
           element={authCtx.isLoggedin ? <Barracks /> : <Auth />}
           exact
         ></Route>
-      </Routes>
-      {/* {!authCtx.isLoggedin && <Auth />}
-      {authCtx.isLoggedin && <Dashboard />} */}
+      </Routes> */}
+      {!authCtx.isLoggedin && <Auth />}
+      {authCtx.isLoggedin && <Dashboard />}
       {/* <Barracks />
       {/* <User/> */}
     </div>

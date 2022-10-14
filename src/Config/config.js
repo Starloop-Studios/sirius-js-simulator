@@ -46,7 +46,7 @@ const buildingForCreation = {
 //   '{"path":"/api/v1/settlement/buildings", "method":"GET"}';
 
 const productionForCreation = { path: "/api/v1/production", method: "POST" };
-const armyForRetrieval = { path: "/api/v1/army", method: "GET" };
+const armyForRetrieval = { path: "/api/v1/combatUnits", method: "GET" };
 // const productionForRetrieval = '{"path":"/api/v1/production", "method":"GET"}';
 
 // const millisecondTickForTimer = 1000;

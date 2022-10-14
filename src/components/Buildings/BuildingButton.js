@@ -133,6 +133,7 @@ const BuildingButton = (props) => {
             }}
             variant="success"
             disabled={data.status === "activated" ? false : true}
+            href="#barracks"
           >
             {controlName}
           </Button>

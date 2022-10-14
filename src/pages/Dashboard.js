@@ -8,6 +8,8 @@ import Toast from "../components/UI/Toast";
 import User from "../components/User/User";
 import Building from "../components/Buildings/Building";
 import Inventory from "../components/Inventory/Inventory";
+import Barracks from "../components/Barracks/Barracks";
+import Footer from "../components/Footer/Footer";
 
 const Dashboard = () => {
   const { isLoading, isError, sendRequest, clearError } = useHttp();
@@ -15,6 +17,9 @@ const Dashboard = () => {
   const dataCtx = useContext(DataContext);
   const [inventoryData, setInventoryData] = useState(null);
   const [buildingData, setBuildingData] = useState([]);
+  const [queueData, setQueueData] = useState([]);
+  const [armyData, setArmyData] = useState([]);
+  const [barrackId, setBarrackId] = useState(null);
 
   const setBalancingDataHandler = async () => {
     const balancingForRetrievalOfLatest = config.balancingForRetrievalOfLatest;
@@ -78,11 +83,51 @@ const Dashboard = () => {
       console.log(error, isError);
     }
   }, [inventoryData]);
+  const getLatestQueue = useCallback(async () => {
+    try {
+      const data = await sendRequest(
+        `${process.env.REACT_APP_HOST_URL}/api/v1/production?buildingId=${barrackId}`,
+        "GET",
+        null,
+        {
+          Authorization: `Bearer ${authCtx.token}`,
+        }
+      );
+      console.log("Queue Data recevied.", data);
+      setQueueData(data);
+      // if (!data.length) {
+      //   return;
+      // }
+      // const produceId = data[0].meta.produceId;
+      // dataCtx.setCurrentProduce(produceId);
+    } catch (error) {
+      console.log(error, isError);
+    }
+  }, [barrackId, queueData]);
+  const getLatestArmy = useCallback(async () => {
+    console.log("getLatestArmy() called .");
+    const armyForRetrieval = config.armyForRetrieval;
+    try {
+      const data = await sendRequest(
+        `${process.env.REACT_APP_HOST_URL}${armyForRetrieval.path}`,
+        armyForRetrieval.method,
+        null,
+        {
+          Authorization: `Bearer ${authCtx.token}`,
+        }
+      );
+      console.log("Army Data recevied.", data);
+      setArmyData(data.content);
+    } catch (error) {
+      console.log(error, isError);
+    }
+  }, [armyData]);
 
   useEffect(() => {
     setBalancingDataHandler();
     getLatestSettlement();
     getLatestInventory();
+    getLatestArmy();
   }, []);
 
   return (
@@ -97,14 +142,25 @@ const Dashboard = () => {
           setBuildingData={setBuildingData}
           getLatestSettlement={getLatestSettlement}
           getLatestInventory={getLatestInventory}
+          setBarrackId={setBarrackId}
         />
       )}
-      {inventoryData && (
-        <Inventory
-          inventoryData={inventoryData}
+      {barrackId && (
+        <Barracks
+          barrackId={barrackId}
+          getLatestQueue={getLatestQueue}
           getLatestInventory={getLatestInventory}
+          getLatestArmy={getLatestArmy}
+          queueData={queueData}
+          setQueueData={setQueueData}
+          armyData={armyData}
         />
       )}
+      <Footer
+        inventoryData={inventoryData}
+        getLatestInventory={getLatestInventory}
+        armyData={armyData}
+      />
     </>
   );
 };

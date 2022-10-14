@@ -1,0 +1,34 @@
+.container {
+    border: 2px solid rgb(14, 13, 13);
+    border-radius: 5px;
+    width: 30%;
+  }
+  .name {
+    border-bottom: 2px solid black;
+    padding: 10px;
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+  .box {
+    /* text-align: left; */
+    margin: 5px;
+    text-transform: capitalize;
+    font-size: 1.2rem;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-around;
+  }
+  .itemName {
+    /* border: 2px solid red; */
+    text-transform: capitalize;
+    width: 30%;
+  }
+  .itemQuantity {
+    /* border: 2px solid red; */
+    width: 30%;
+  }
+  .itemControl {
+    /* border: 2px solid red; */
+    width: 30%;
+  }

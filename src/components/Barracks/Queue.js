@@ -4,7 +4,7 @@ const Queue = (props) => {
   const { queueData } = props;
   return (
     <div className={Styles.queueCont}>
-      <h3>Queue</h3>
+      <h4>Queue</h4>
       <div>
         {queueData && queueData.length == 0 && (
           <h6>Queue is Empty . Start Producing.</h6>
