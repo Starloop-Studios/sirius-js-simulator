@@ -7,7 +7,7 @@ const useHttp = () => {
   const clearError = useCallback(() => {
     setIsError(null);
   }, []);
-  
+
   const sendRequest = useCallback(
     async (url, method = "GET", body = null, headers = {}) => {
       try {
@@ -27,7 +27,7 @@ const useHttp = () => {
       } catch (error) {
         setIsLoading(false);
         setIsError(error.message);
-        throw new Error(error);
+        throw new Error(error.message);
       }
     },
     []

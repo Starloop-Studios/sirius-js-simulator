@@ -10,6 +10,7 @@ import Building from "../components/Buildings/Building";
 import Inventory from "../components/Inventory/Inventory";
 import Barracks from "../components/Barracks/Barracks";
 import Footer from "../components/Footer/Footer";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const { isLoading, isError, sendRequest, clearError } = useHttp();
@@ -32,7 +33,8 @@ const Dashboard = () => {
       );
       dataCtx.setBalancingData(data.contents);
     } catch (error) {
-      console.log(error, isError);
+      toast.error(error.message);
+      console.log(error.message);
     }
   };
 
@@ -61,7 +63,8 @@ const Dashboard = () => {
       );
       dataCtx.setSettlementId(data.content[0].id);
     } catch (error) {
-      console.log(error, isError);
+      toast.error(error.message);
+      console.log(error.message);
     }
   }, [buildingData]);
 
@@ -80,7 +83,8 @@ const Dashboard = () => {
       setInventoryData(data.content);
       // dataCtx.setInventoryData(data.content);
     } catch (error) {
-      console.log(error, isError);
+      toast.error(error.message);
+      console.log(error.message);
     }
   }, [inventoryData]);
   const getLatestQueue = useCallback(async () => {
@@ -95,13 +99,9 @@ const Dashboard = () => {
       );
       console.log("Queue Data recevied.", data);
       setQueueData(data);
-      // if (!data.length) {
-      //   return;
-      // }
-      // const produceId = data[0].meta.produceId;
-      // dataCtx.setCurrentProduce(produceId);
     } catch (error) {
-      console.log(error, isError);
+      toast.error(error.message);
+      console.log(error.message);
     }
   }, [barrackId, queueData]);
   const getLatestArmy = useCallback(async () => {
@@ -119,7 +119,8 @@ const Dashboard = () => {
       console.log("Army Data recevied.", data);
       setArmyData(data.content);
     } catch (error) {
-      console.log(error, isError);
+      toast.error(error.message);
+      console.log(error.message);
     }
   }, [armyData]);
 
@@ -133,7 +134,7 @@ const Dashboard = () => {
   return (
     <>
       <h3>Welcome to Sirirus-Zoolana Simulator</h3>
-      <Toast isError={isError} clearError={clearError} />
+      {isError && <Toast isError={isError} clearError={clearError} />}
       {isLoading && <Spinner show={isLoading} />}
       {authCtx.userData && <User />}
       {buildingData && (

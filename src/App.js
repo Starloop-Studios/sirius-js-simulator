@@ -1,11 +1,10 @@
 import "./App.css";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import AuthContext from "./store/auth-context";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
-import { Routes, Route } from "react-router-dom";
-import Barracks from "./pages/BarracksPage";
-
+// import { Toast } from "react-toastify/dist/components";
+import Toast from './components/UI/Toast'
 function App() {
   const authCtx = useContext(AuthContext);
 
@@ -28,6 +27,7 @@ function App() {
           exact
         ></Route>
       </Routes> */}
+      {/* <Toast /> */}
       {!authCtx.isLoggedin && <Auth />}
       {authCtx.isLoggedin && <Dashboard />}
       {/* <Barracks />

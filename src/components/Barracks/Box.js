@@ -1,7 +1,6 @@
 import Styles from "./Box.module.css";
 import Button from "react-bootstrap/Button";
 import Timer from "../UI/Timer";
-import DataContext from "../../store/data-context";
 const Box = (props) => {
   const { data, startProduceHandler, checkProductionFinish, queueData } = props;
   return (

@@ -1,26 +1,27 @@
 import React from "react";
-import Toast from "react-bootstrap/Toast";
-import ToastContainer from "react-bootstrap/ToastContainer";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const ToastComponent = (props) => {
   const { isError, clearError } = props;
+
   return (
-    <ToastContainer className="p-3" position="top-start">
-      <Toast
-        show={!!isError}
-        onClose={() => {
-          clearError();
-        }}
-        animation={true}
-        bg="danger"
-      >
-        <Toast.Header closeButton={true}>
-          <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
-          <strong className="me-auto">Message</strong>
-        </Toast.Header>
-        <Toast.Body>{isError}</Toast.Body>
-      </Toast>
-    </ToastContainer>
+    <ToastContainer
+      position="top-right"
+      autoClose={2000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick={true}
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="light"
+      onClose={false}
+      onClick={() => {
+        clearError();
+      }}
+      closeButton={false}
+    />
   );
 };
 

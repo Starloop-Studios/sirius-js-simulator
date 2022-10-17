@@ -7,6 +7,7 @@ import useHttp from "../../hooks/use-http";
 import Toast from "../UI/Toast";
 import AuthContext from "../../store/auth-context";
 import Spinner from "../UI/Spinner";
+import { toast } from "react-toastify";
 
 function formBody(details) {
   var formBody = [];
@@ -39,7 +40,8 @@ const Auth = () => {
       console.log("App authenticate Token received .");
       return data.accessToken;
     } catch (error) {
-      console.log(error, isError);
+      toast.error(error.message);
+      console.log(error.message);
     }
   };
   const signUp = async () => {
@@ -84,8 +86,10 @@ const Auth = () => {
         username: data.username,
       });
       console.log("Current user data set authctx");
+      return data.username;
     } catch (error) {
-      console.log(error, isError);
+      toast.error(error.message);
+      console.log(error.message);
     }
   };
 
@@ -111,10 +115,12 @@ const Auth = () => {
         { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" }
       );
       authCtx.login(data.accessToken);
-      await getCurrentUser(data.accessToken);
+      const userName = await getCurrentUser(data.accessToken);
+      toast.success(`User Log In Sucessfull ,User Name: ${userName}`);
       console.log("User loggin Sucessfull.");
     } catch (error) {
-      console.log(error, isError);
+      toast.error(error.message);
+      console.log(error.message);
     }
   };
 
@@ -148,7 +154,7 @@ const Auth = () => {
         <Button onClick={logIn}>Log In</Button>
         <Button onClick={signUp}>Sign Up</Button>
       </div>
-      <Toast isError={isError} clearError={clearError} />
+      {isError && <Toast isError={isError} clearError={clearError} />}
       {authCtx.userData && (
         <div>User Creation Sucessfull .Log in to continue.</div>
       )}

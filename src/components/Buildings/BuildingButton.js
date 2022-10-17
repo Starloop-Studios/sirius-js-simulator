@@ -7,6 +7,7 @@ import AuthContext from "../../store/auth-context";
 import DataContext from "../../store/data-context";
 import useHttp from "../../hooks/use-http";
 import Toast from "../UI/Toast";
+import { toast } from "react-toastify";
 const BuildingButton = (props) => {
   const { data, checkBuildFinishHandler, collectHandler } = props;
   const { isLoading, isError, sendRequest, clearError } = useHttp();
@@ -44,9 +45,14 @@ const BuildingButton = (props) => {
           Authorization: `Bearer ${authCtx.token}`,
         }
       );
-      setProduce(reqData[0].meta.quantity ? reqData[0].meta.quantity : 0);
+      setProduce(
+        reqData.length > 0 && reqData[0].meta.quantity
+          ? reqData[0].meta.quantity
+          : 0
+      );
     } catch (error) {
-      console.log(error, isError);
+      toast.error(error.message);
+      console.log(error.message);
     }
   };
 

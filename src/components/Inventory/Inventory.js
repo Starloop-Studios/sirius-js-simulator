@@ -7,6 +7,7 @@ import useHttp from "../../hooks/use-http";
 import Toast from "../UI/Toast";
 import Spinner from "../UI/Spinner";
 import Button from "react-bootstrap/Button";
+import { toast } from "react-toastify";
 const Inventory = (props) => {
   const authCtx = useContext(AuthContext);
   const dataCtx = useContext(DataContext);
@@ -26,6 +27,7 @@ const Inventory = (props) => {
           Authorization: `Bearer ${authCtx.token}`,
         }
       );
+      toast.success(`Added ${quantity} ${itemId} to inventory.`);
       console.log(`${quantity} ${itemId} added to inventory.`);
       await getLatestInventory();
     } catch (error) {

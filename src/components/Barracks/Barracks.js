@@ -1,14 +1,16 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext } from "react";
 import DataContext from "../../store/data-context";
 import AuthContext from "../../store/auth-context";
 import Box from "./Box";
 import Styles from "./Barracks.module.css";
-import Army from "./Army";
 import Queue from "./Queue";
 import config from "../../Config/config";
 import useHttp from "../../hooks/use-http";
 import Toast from "../UI/Toast";
-import Spinner from '../UI/Spinner'
+import Spinner from "../UI/Spinner";
+import { toast } from "react-toastify";
+
+const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
 const Barracks = (props) => {
   const {
     barrackId,
@@ -17,7 +19,6 @@ const Barracks = (props) => {
     getLatestArmy,
     queueData,
     setQueueData,
-    armyData,
   } = props;
   const { isLoading, isError, sendRequest, clearError } = useHttp();
   const dataCtx = useContext(DataContext);
@@ -45,11 +46,13 @@ const Barracks = (props) => {
           Authorization: `Bearer ${authCtx.token}`,
         }
       );
+      toast.success(`${capitalize(data.meta.produceId)} added to queue.`);
       console.log("Production Data  recevied.", data);
       await getLatestQueue();
       await getLatestInventory();
     } catch (error) {
-      console.log(error, isError);
+      toast.error(error.message);
+      console.log(error.message);
     }
   };
 
@@ -74,14 +77,15 @@ const Barracks = (props) => {
                 ...ele,
                 cost: cost,
               };
-              return(              <Box
-                key={ele.id}
-                data={dataObject}
-                startProduceHandler={startProduceHandler}
-                checkProductionFinish={checkProductionFinish}
-                queueData={queueData}
-              />)
-
+              return (
+                <Box
+                  key={ele.id}
+                  data={dataObject}
+                  startProduceHandler={startProduceHandler}
+                  checkProductionFinish={checkProductionFinish}
+                  queueData={queueData}
+                />
+              );
             })}
         </div>
       </div>

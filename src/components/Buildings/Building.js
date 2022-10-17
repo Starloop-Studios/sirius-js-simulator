@@ -10,6 +10,7 @@ import Toast from "../UI/Toast";
 import BuildingButton from "./BuildingButton";
 import Spinner from "../UI/Spinner";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Building = (props) => {
   const authCtx = useContext(AuthContext);
@@ -22,7 +23,7 @@ const Building = (props) => {
     setBuildingData,
     getLatestSettlement,
     getLatestInventory,
-    setBarrackId
+    setBarrackId,
   } = props;
   const buildingControls = dataCtx.balancingData.Building;
   const buildingCost = dataCtx.balancingData.BuildingCost;
@@ -40,6 +41,7 @@ const Building = (props) => {
       console.log("New Settleement created !", data);
       dataCtx.setSettlementId(data.id);
     } catch (error) {
+      toast.error(isError);
       console.log(error, isError);
     }
   };
@@ -67,10 +69,12 @@ const Building = (props) => {
         }
       );
       console.log("build Data recevied.", data);
+      toast.info(`Building Started For ${id}`);
       await getLatestSettlement();
       await getLatestInventory();
     } catch (error) {
-      console.log(error, isError);
+      toast.error(error.message);
+      console.log(error.message);
     }
   };
 
@@ -111,10 +115,14 @@ const Building = (props) => {
           Authorization: `Bearer ${authCtx.token}`,
         }
       );
+      toast.success(
+        `Collected ${data.meta.currentCollected} units ${data.meta.produceId}.`
+      );
       console.log("collection Data recevied.", data);
       await getLatestInventory();
     } catch (error) {
-      console.log(error, isError);
+      toast.error(error.message);
+      console.log(error.message);
     }
   };
 
