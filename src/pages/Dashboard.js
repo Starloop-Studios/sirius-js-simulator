@@ -131,6 +131,12 @@ const Dashboard = () => {
     getLatestArmy();
   }, []);
 
+  useEffect(() => {
+    if (barrackId) {
+      getLatestQueue();
+    }
+  }, [barrackId]);
+
   return (
     <>
       <h3>Welcome to Sirirus-Zoolana Simulator</h3>

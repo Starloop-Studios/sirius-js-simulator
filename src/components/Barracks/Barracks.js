@@ -1,4 +1,4 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import DataContext from "../../store/data-context";
 import AuthContext from "../../store/auth-context";
 import Box from "./Box";
@@ -11,6 +11,7 @@ import Spinner from "../UI/Spinner";
 import { toast } from "react-toastify";
 
 const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
+
 const Barracks = (props) => {
   const {
     barrackId,
@@ -60,7 +61,7 @@ const Barracks = (props) => {
     setQueueData([]);
     await getLatestQueue();
     await getLatestArmy();
-    console.log("Check Called .", queueData);
+    console.log("Check Called .");
   }, [queueData]);
 
   return (

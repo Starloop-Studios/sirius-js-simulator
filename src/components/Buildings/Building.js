@@ -146,10 +146,9 @@ const Building = (props) => {
               cost: cost,
             };
             return (
-              <div className={Styles.build}>
+              <div className={Styles.build} key={index}>
                 <Box
                   data={dataObject}
-                  key={index}
                   startBuildHandler={startBuildHandler}
                 ></Box>
                 {newBuidlingArray.map((ele, index) => (
