@@ -1,0 +1,24 @@
+.container {
+  /* border: 2px solid red; */
+  margin-top: 20vh;
+}
+.body {
+  /* border: 2px solid green; */
+  padding: 5vh;
+  font-size: 2rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+}
+.control {
+  /* border: 2px solid blue; */
+  margin-top: 2vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.control button{
+    width: 20%;
+    margin: 10px;
+    margin-bottom: 30px;
+}
+

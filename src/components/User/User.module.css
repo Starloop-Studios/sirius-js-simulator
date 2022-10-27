@@ -1,0 +1,30 @@
+.container {
+    border: 2px solid black;
+    border-radius: 5px;
+    width: 40%;
+    margin: auto;
+    font-size: 1.2rem;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+}
+.head{
+    border-bottom: 2px solid black;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+.content{
+    display: grid;
+    grid-template-columns: 4fr 1fr 5fr;
+    font-weight: 500;
+    text-align: left;
+}
+.title{
+    /* border: 2px solid green; */
+    padding: 5px;
+    margin-left: 20px;
+}
+.main{
+    /* border: 2px solid green; */
+    padding: 5px;
+    
+}

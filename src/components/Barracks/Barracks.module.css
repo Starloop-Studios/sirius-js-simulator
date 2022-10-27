@@ -1,0 +1,52 @@
+.container {
+  /* border: 2px solid red; */
+  display: flex;
+}
+.main {
+  /* border: 2px solid green; */
+  width: 70%;
+}
+.controls{
+  /* border: 2px solid cadetblue; */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  padding: 10px;
+  /* display: flex;
+  flex-direction: column; */
+}
+.queue {
+  /* border: 2px solid blue; */
+  width: 30%;
+  padding: 20px;
+  text-transform: capitalize;
+  font-size: 1.5rem;
+}
+.queueCont {
+  border: 2px solid black;
+  border-radius: 5px;
+  margin: auto;
+  padding: 10px;
+}
+
+.armyBox {
+  display: flex;
+  /* border: 2px solid cadetblue; */
+  width: 100%;
+  justify-content: space-around;
+}
+
+/* .items{
+  border: 2px solid red;
+} */
+
+.inventory {
+  border: 2px solid rgb(14, 13, 13);
+  border-radius: 5px;
+  /* width: 30%; */
+  margin: auto;
+  /* margin-top: 5vh; */
+  font-size: 1.5rem;
+  padding: 20px;
+  /* display: flex; */
+}
