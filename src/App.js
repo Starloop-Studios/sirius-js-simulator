@@ -28,8 +28,8 @@ function App() {
         ></Route>
       </Routes> */}
       {/* <Toast /> */}
-      {!authCtx.isLoggedin && <Auth />}
-      {authCtx.isLoggedin && <Dashboard />}
+      {/* {!authCtx.isLoggedin && <Auth />}
+      {authCtx.isLoggedin && <Dashboard />} */}
       {/* <Barracks />
       {/* <User/> */}
     </div>
