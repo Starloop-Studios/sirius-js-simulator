@@ -1,73 +1,47 @@
+import React from "react";
 import { useCallback, useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import config from "../Config/config";
 import useHttp from "../hooks/use-http";
 import AuthContext from "../store/auth-context";
 import DataContext from "../store/data-context";
-import Spinner from "../components/UI/Spinner";
-import Toast from "../components/UI/Toast";
 import User from "../components/User/User";
 import Building from "../components/Buildings/Building";
 import Inventory from "../components/Inventory/Inventory";
 import Barracks from "../components/Barracks/Barracks";
 import Footer from "../components/Footer/Footer";
+import Toast from "../components/UI/Toast";
+import Spinner from "../components/UI/Spinner";
 import { toast } from "react-toastify";
-
-const Dashboard = () => {
+const BarracksPage = () => {
   const { isLoading, isError, sendRequest, clearError } = useHttp();
   const authCtx = useContext(AuthContext);
   const dataCtx = useContext(DataContext);
-  const [inventoryData, setInventoryData] = useState(null);
-  const [buildingData, setBuildingData] = useState([]);
+  const params = useParams();
+
   const [queueData, setQueueData] = useState([]);
   const [armyData, setArmyData] = useState([]);
-  const [barrackId, setBarrackId] = useState(null);
+  // const [barrackId, setBarrackId] = useState(params.id);
+  const [inventoryData, setInventoryData] = useState();
+  const barrackId = params.id;
 
-  const setBalancingDataHandler = async () => {
-    const balancingForRetrievalOfLatest = config.balancingForRetrievalOfLatest;
+  const getLatestQueue = useCallback(async () => {
     try {
       const data = await sendRequest(
-        `${process.env.REACT_APP_HOST_URL}${balancingForRetrievalOfLatest.path}`,
-        balancingForRetrievalOfLatest.method,
+        `${process.env.REACT_APP_HOST_URL}/api/v1/production?buildingId=${barrackId}`,
+        "GET",
         null,
-        { Authorization: `Bearer ${authCtx.token}` }
+        {
+          Authorization: `Bearer ${authCtx.token}`,
+        }
       );
-      dataCtx.setBalancingData(data.contents);
+      console.log("Queue Data recevied.", data);
+      setQueueData(data);
     } catch (error) {
       toast.error(error.message);
       console.log(error.message);
     }
-  };
-
-  const getLatestSettlement = useCallback(async () => {
-    const settlementForRetrieval = config.settlementForRetrieval;
-    try {
-      const data = await sendRequest(
-        `${process.env.REACT_APP_HOST_URL}${settlementForRetrieval.path}`,
-        settlementForRetrieval.method,
-        null,
-        { Authorization: `Bearer ${authCtx.token}` }
-      );
-      console.log("Latest Settlement loaded .", data);
-      if (!data.content.length || !data.content[0].buildings.length) {
-        console.log("No building Data.");
-        return;
-      }
-      setBuildingData(
-        data.content[0].buildings.sort((a, b) => {
-          const nameA = a.balancingContentId;
-          const nameB = b.balancingContentId;
-          if (nameA < nameB) return -1;
-          if (nameA > nameB) return 1;
-          return 0;
-        })
-      );
-      dataCtx.setSettlementId(data.content[0].id);
-    } catch (error) {
-      toast.error(error.message);
-      console.log(error.message);
-    }
-  }, [buildingData]);
-
+  }, [barrackId, queueData]);
   const getLatestInventory = useCallback(async () => {
     const inventoryForRetrievalByAll = config.inventoryForRetrievalByAll;
     try {
@@ -81,12 +55,11 @@ const Dashboard = () => {
       );
       console.log("Inventory Data recevied.", data);
       dataCtx.setInventoryData(data.content);
-      // dataCtx.setInventoryData(data.content);
     } catch (error) {
       toast.error(error.message);
       console.log(error.message);
     }
-  }, [inventoryData]);
+  }, []);
 
   const getLatestArmy = useCallback(async () => {
     console.log("getLatestArmy() called .");
@@ -106,32 +79,30 @@ const Dashboard = () => {
       toast.error(error.message);
       console.log(error.message);
     }
-  }, [armyData]);
+  }, []);
 
   useEffect(() => {
-    setBalancingDataHandler();
-    getLatestSettlement();
-    getLatestInventory();
+    getLatestQueue();
     getLatestArmy();
   }, []);
 
   return (
-    <>
-      <h3>Welcome to Sirirus-Zoolana Simulator</h3>
+    <div>
       {isError && <Toast isError={isError} clearError={clearError} />}
       {isLoading && <Spinner show={isLoading} />}
-      {authCtx.userData && <User />}
-      {buildingData && (
-        <Building
-          buildingData={buildingData}
-          setBuildingData={setBuildingData}
-          getLatestSettlement={getLatestSettlement}
+      {barrackId && (
+        <Barracks
+          barrackId={barrackId}
+          getLatestQueue={getLatestQueue}
           getLatestInventory={getLatestInventory}
-          setBarrackId={setBarrackId}
+          getLatestArmy={getLatestArmy}
+          queueData={queueData}
+          setQueueData={setQueueData}
+          armyData={armyData}
         />
       )}
-    </>
+    </div>
   );
 };
 
-export default Dashboard;
+export default BarracksPage;
