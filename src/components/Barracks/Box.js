@@ -1,8 +1,28 @@
 import Styles from "./Box.module.css";
 import Button from "react-bootstrap/Button";
 import Timer from "../UI/Timer";
+import moment from "moment";
 const Box = (props) => {
   const { data, startProduceHandler, checkProductionFinish, queueData } = props;
+
+  if (queueData.length > 0 && queueData[0].meta.produceId === data.id) {
+    const currQueueData = queueData[0];
+    const endDate = moment(currQueueData.createdDate).add(
+      data.produceTime * (currQueueData.meta.collected + 1),
+      "s"
+    );
+    const currDate = moment();
+    let diff = Math.ceil(moment.duration(endDate - currDate).asSeconds());
+    if (diff <= 0) {
+      checkProductionFinish();
+    } else if (diff > data.produceTime) {
+      diff = 0;
+    }
+    const startTime =
+      data.produceTime - diff > 2 && diff !== 0 ? diff + 1 : data.produceTime;
+    console.log(startTime);
+  }
+
   return (
     <div className={Styles.container}>
       <div className={Styles.name}>{data.name}</div>

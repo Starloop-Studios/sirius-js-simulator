@@ -3,8 +3,11 @@ import { useContext } from "react";
 import AuthContext from "./store/auth-context";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import Barracks from "./pages/BarracksPage";
+import { Route, Routes, Navigate } from "react-router-dom";
 // import { Toast } from "react-toastify/dist/components";
-import Toast from './components/UI/Toast'
+import Toast from "./components/UI/Toast";
+import FooterPage from "./pages/FooterPage";
 function App() {
   const authCtx = useContext(AuthContext);
 
@@ -15,18 +18,21 @@ function App() {
 
   return (
     <div className="App">
-      {/* <Routes>
+      <Routes>
         <Route
           path="/"
           element={authCtx.isLoggedin ? <Dashboard /> : <Auth />}
           exact
         />
         <Route
-          path="/barracks"
-          element={authCtx.isLoggedin ? <Barracks /> : <Auth />}
+          path="/barracks/:id"
+          element={
+            authCtx.isLoggedin ? <Barracks /> : <Navigate replace to="/" />
+          }
           exact
         ></Route>
-      </Routes> */}
+      </Routes>
+      {authCtx.isLoggedin && <FooterPage />}
       {/* <Toast /> */}
       {/* {!authCtx.isLoggedin && <Auth />}
       {authCtx.isLoggedin && <Dashboard />} */}

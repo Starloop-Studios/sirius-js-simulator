@@ -26,6 +26,7 @@ const Barracks = (props) => {
   const authCtx = useContext(AuthContext);
   const combatUnitData = dataCtx.balancingData.CombatUnit;
   const unitCost = dataCtx.balancingData.UnitCost;
+
   const startProduceHandler = async (produceId) => {
     console.log("StartProductionCalled()");
     const productionForCreation = config.productionForCreation;

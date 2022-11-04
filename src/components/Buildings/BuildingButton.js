@@ -8,22 +8,39 @@ import DataContext from "../../store/data-context";
 import useHttp from "../../hooks/use-http";
 import Toast from "../UI/Toast";
 import { toast } from "react-toastify";
+import moment from "moment";
 const BuildingButton = (props) => {
   const { data, checkBuildFinishHandler, collectHandler } = props;
   const { isLoading, isError, sendRequest, clearError } = useHttp();
   const authCtx = useContext(AuthContext);
   const dataCtx = useContext(DataContext);
   const [produce, setProduce] = useState(0);
-  const startTime = dataCtx.balancingData
-    ? dataCtx.balancingData.Building.find(
-        (ele) => ele.id === data.balancingContentId
-      ).buildTime
-    : 5;
+
+  const buildingTime = dataCtx.balancingData.Building.find(
+    (ele) => ele.id === data.balancingContentId
+  ).buildTime;
+
+  const endDate = moment(data.createdDate).add(buildingTime, "s");
+  const currDate = moment();
+  let diff = Math.ceil(moment.duration(endDate - currDate).asSeconds());
+
+  if (data.status === "pending") {
+    if (diff <= 0) {
+      checkBuildFinishHandler(data.id);
+    } else if (diff > buildingTime) {
+      diff = 0;
+    }
+  }
+
+  const startTime =
+    buildingTime - diff > 2 && diff !== 0 ? diff + 1 : buildingTime;
+
   const buildingCapacity = dataCtx.balancingData
     ? dataCtx.balancingData.BuildingCapacity.find(
         (ele) => ele.buildingId === data.balancingContentId && ele.level === 1
       )
     : {};
+
   const buildingYeild = dataCtx.balancingData
     ? dataCtx.balancingData.BuildingYield.find(
         (ele) => ele.buildingId === data.balancingContentId
@@ -139,7 +156,6 @@ const BuildingButton = (props) => {
             }}
             variant="success"
             disabled={data.status === "activated" ? false : true}
-            href="#barracks"
           >
             {controlName}
           </Button>

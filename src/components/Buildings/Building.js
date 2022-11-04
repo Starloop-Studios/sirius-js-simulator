@@ -57,7 +57,6 @@ const Building = (props) => {
       settlementId,
       balancingContentId: id,
     };
-    console.log(buildingReqData);
     try {
       const data = await sendRequest(
         `${process.env.REACT_APP_HOST_URL}/api/v1/settlement/${settlementId}/buildings`,
@@ -68,6 +67,8 @@ const Building = (props) => {
           Authorization: `Bearer ${authCtx.token}`,
         }
       );
+      // const currDate = new Date().toUTCString();
+      // console.log(currDate, "currDate startFun");
       console.log("build Data recevied.", data);
       toast.info(`Building Started For ${id}`);
       await getLatestSettlement();
@@ -95,7 +96,7 @@ const Building = (props) => {
     if (type === "barracks") {
       console.log("Enter to the barracks called .");
       setBarrackId(id);
-      // navigate("/barracks", { state: { buildingId: id } });
+      navigate(`/barracks/${id}`);
       return;
     }
     const productionForCreation = config.productionForCreation;

@@ -12,7 +12,7 @@ const Inventory = (props) => {
   const authCtx = useContext(AuthContext);
   const dataCtx = useContext(DataContext);
   const { isLoading, isError, sendRequest, clearError } = useHttp();
-  const { inventoryData, getLatestInventory } = props;
+  const { getLatestInventory } = props;
 
   const addToInventoryHandler = async (itemId) => {
     const userId = authCtx.userData.userId;
@@ -42,21 +42,25 @@ const Inventory = (props) => {
         {isLoading ? "Updating ..." : "Inventory"}
       </div>
       <div className={Styles.content}>
-        {inventoryData.map((ele, index) => (
-          <div key={index} className={Styles.box}>
-            <div className={Styles.itemName}>{ele.balancingContentId}</div>
-            <div className={Styles.itemQuantity}>{ele.quantity}</div>
-            <div className={Styles.itemControl}>
-              <Button
-                onClick={() => {
-                  addToInventoryHandler(ele.balancingContentId);
-                }}
-              >
-                +ADD
-              </Button>
+        {dataCtx.inventoryData.length > 0 &&
+          dataCtx.inventoryData.map((ele, index) => (
+            <div key={index} className={Styles.box}>
+              <div className={Styles.itemName}>{ele.balancingContentId}</div>
+              <div className={Styles.itemQuantity}>{ele.quantity}</div>
+              <div className={Styles.itemControl}>
+                <Button
+                  onClick={() => {
+                    addToInventoryHandler(ele.balancingContentId);
+                  }}
+                >
+                  +ADD
+                </Button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        {!dataCtx.inventoryData.length === 0 && (
+          <span>No Inventory Data received.</span>
+        )}
       </div>
     </div>
   );
