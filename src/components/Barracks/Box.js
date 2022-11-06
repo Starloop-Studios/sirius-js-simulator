@@ -23,7 +23,7 @@ const Box = (props) => {
     // console.log(currQueueData.createdDate, "createdDate");
     // console.log(endDate, "endDate");
     // console.log(currDate, "currDate");
-    // console.log(diff, "diff");
+    console.log(diff, "diff");
   }
 
   return (
