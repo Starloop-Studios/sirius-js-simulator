@@ -24,12 +24,8 @@ const BuildingButton = (props) => {
   const currDate = moment();
   let diff = Math.ceil(moment.duration(endDate - currDate).asSeconds());
 
-  if (data.status === "pending") {
-    if (diff <= 0) {
-      checkBuildFinishHandler(data.id);
-    } else if (diff > buildingTime) {
-      diff = 0;
-    }
+  if (data.status === "pending" && (diff <= 0 || diff > buildingTime)) {
+    diff = 0;
   }
 
   const startTime =
