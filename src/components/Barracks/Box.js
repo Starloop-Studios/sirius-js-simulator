@@ -4,23 +4,26 @@ import Timer from "../UI/Timer";
 import moment from "moment";
 const Box = (props) => {
   const { data, startProduceHandler, checkProductionFinish, queueData } = props;
-
+  
+  let startTime = data.produceTime;
   if (queueData.length > 0 && queueData[0].meta.produceId === data.id) {
     const currQueueData = queueData[0];
     const endDate = moment(currQueueData.createdDate).add(
-      data.produceTime * (currQueueData.meta.collected + 1),
+      data.produceTime *
+        ((currQueueData.meta.collected ? currQueueData.meta.collected : 0) + 1),
       "s"
     );
     const currDate = moment();
     let diff = Math.ceil(moment.duration(endDate - currDate).asSeconds());
-    if (diff <= 0) {
-      checkProductionFinish();
-    } else if (diff > data.produceTime) {
+    if (diff <= 0 || diff > data.produceTime) {
       diff = 0;
     }
-    const startTime =
+    startTime =
       data.produceTime - diff > 2 && diff !== 0 ? diff + 1 : data.produceTime;
-    console.log(startTime);
+    // console.log(currQueueData.createdDate, "createdDate");
+    // console.log(endDate, "endDate");
+    // console.log(currDate, "currDate");
+    // console.log(diff, "diff");
   }
 
   return (
@@ -47,7 +50,8 @@ const Box = (props) => {
           <div className={Styles.main}>
             {" "}
             <Timer
-              startTime={data.produceTime}
+              startTime={startTime}
+              // startTime={data.produceTime}
               checkBuildFinishHandler={checkProductionFinish}
               id={data.id}
             />
