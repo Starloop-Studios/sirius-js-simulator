@@ -9,7 +9,7 @@ import useHttp from "../../hooks/use-http";
 import Toast from "../UI/Toast";
 import Spinner from "../UI/Spinner";
 import { toast } from "react-toastify";
-import { data } from "../../data/intialData";
+
 const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
 
 const Barracks = (props) => {
