@@ -25,6 +25,7 @@ const BuildingButton = (props) => {
   let diff = Math.ceil(moment.duration(endDate - currDate).asSeconds());
 
   if (data.status === "pending" && (diff <= 0 || diff > buildingTime)) {
+    console.log(diff)
     diff = 0;
   }
 

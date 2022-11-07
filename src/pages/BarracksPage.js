@@ -18,11 +18,7 @@ const BarracksPage = () => {
   const authCtx = useContext(AuthContext);
   const dataCtx = useContext(DataContext);
   const params = useParams();
-
   const [queueData, setQueueData] = useState([]);
-  const [armyData, setArmyData] = useState([]);
-  // const [barrackId, setBarrackId] = useState(params.id);
-  const [inventoryData, setInventoryData] = useState();
   const barrackId = params.id;
 
   const getLatestQueue = useCallback(async () => {
@@ -81,10 +77,10 @@ const BarracksPage = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   getLatestQueue();
-  //   getLatestArmy();
-  // }, []);
+  useEffect(() => {
+    getLatestQueue();
+    getLatestArmy();
+  }, []);
 
   return (
     <div>
@@ -98,7 +94,6 @@ const BarracksPage = () => {
           getLatestArmy={getLatestArmy}
           queueData={queueData}
           setQueueData={setQueueData}
-          armyData={armyData}
         />
       )}
     </div>
