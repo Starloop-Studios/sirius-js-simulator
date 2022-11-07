@@ -1,4 +1,5 @@
 import React from "react";
+import { data } from "../../data/intialData";
 import Styles from "./Barracks.module.css";
 const Queue = (props) => {
   const { queueData } = props;
@@ -13,6 +14,7 @@ const Queue = (props) => {
           queueData.map((ele, index) => (
             <div key={index}>
               {index + 1}.&nbsp;{ele.meta.produceId}
+              ({ele.meta.collected ? ele.meta.collected : 0}/{ele.meta.expected})
             </div>
           ))}
       </div>

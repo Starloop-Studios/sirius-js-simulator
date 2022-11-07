@@ -81,10 +81,10 @@ const BarracksPage = () => {
     }
   }, []);
 
-  useEffect(() => {
-    getLatestQueue();
-    getLatestArmy();
-  }, []);
+  // useEffect(() => {
+  //   getLatestQueue();
+  //   getLatestArmy();
+  // }, []);
 
   return (
     <div>

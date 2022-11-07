@@ -9,7 +9,7 @@ import useHttp from "../../hooks/use-http";
 import Toast from "../UI/Toast";
 import Spinner from "../UI/Spinner";
 import { toast } from "react-toastify";
-
+import { data } from "../../data/intialData";
 const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
 
 const Barracks = (props) => {
@@ -27,7 +27,7 @@ const Barracks = (props) => {
   const combatUnitData = dataCtx.balancingData.CombatUnit;
   const unitCost = dataCtx.balancingData.UnitCost;
 
-  const startProduceHandler = async (produceId) => {
+  const startProduceHandler = async (produceId, unitQuanity) => {
     console.log("StartProductionCalled()");
     const productionForCreation = config.productionForCreation;
     const startProdData = {
@@ -36,6 +36,7 @@ const Barracks = (props) => {
       buildingId: barrackId,
       meta: {
         produceId: produceId,
+        expected: unitQuanity,
       },
     };
     try {

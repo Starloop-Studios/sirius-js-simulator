@@ -111,8 +111,6 @@ const Dashboard = () => {
   useEffect(() => {
     setBalancingDataHandler();
     getLatestSettlement();
-    getLatestInventory();
-    getLatestArmy();
   }, []);
 
   return (
