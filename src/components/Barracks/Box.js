@@ -11,25 +11,25 @@ const Box = (props) => {
   const maxQuantity = 20;
   const minQuantity = 1;
   //timer sync form backend
-  // if (queueData.length > 0 && queueData[0].meta.produceId === data.id) {
-  //   const currQueueData = queueData[0];
-  //   const endDate = moment(currQueueData.createdDate).add(
-  //     data.produceTime *
-  //       ((currQueueData.meta.collected ? currQueueData.meta.collected : 0) + 1),
-  //     "s"
-  //   );
-  //   const currDate = moment();
-  //   let diff = Math.ceil(moment.duration(endDate - currDate).asSeconds());
-  //   if (diff <= 0 || diff > data.produceTime) {
-  //     diff = 0;
-  //   }
-  //   startTime =
-  //     data.produceTime - diff > 2 && diff !== 0 ? diff + 1 : data.produceTime;
-  //   // console.log(currQueueData.createdDate, "createdDate");
-  //   // console.log(endDate, "endDate");
-  //   // console.log(currDate, "currDate");
-  //   console.log(diff, "diff");
-  // }
+  if (queueData.length > 0 && queueData[0].meta.produceId === data.id) {
+    const currQueueData = queueData[0];
+    const endDate = moment(currQueueData.startDate).add(
+      data.produceTime *
+        ((currQueueData.meta.collected ? currQueueData.meta.collected : 0) + 1),
+      "s"
+    );
+    const currDate = moment();
+    let diff = Math.ceil(moment.duration(endDate - currDate).asSeconds());
+    if (diff <= 0 || diff > data.produceTime) {
+      diff = 0;
+    }
+    startTime =
+      data.produceTime - diff > 2 && diff !== 0 ? diff + 1 : data.produceTime;
+    // console.log(currQueueData.createdDate, "createdDate");
+    // console.log(endDate, "endDate");
+    // console.log(currDate, "currDate");
+    // console.log(diff, "diff");
+  }
 
   return (
     <div className={Styles.container}>
@@ -104,7 +104,7 @@ const Box = (props) => {
           size="sm"
           onClick={() => {
             setUnitQuantity(1);
-            startProduceHandler(data.id , unitQuanity);
+            startProduceHandler(data.id, unitQuanity);
           }}
         >
           Produce
