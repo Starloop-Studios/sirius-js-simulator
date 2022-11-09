@@ -8,6 +8,7 @@ const DataContext = createContext({
   armyQueue: [],
   currProduce: "none",
   balancingData: {},
+  barrackId: "",
   setBuildingControls: () => {},
   setInitialData: () => {},
   setBuildingData: () => {},
@@ -17,6 +18,7 @@ const DataContext = createContext({
   setArmyData: () => {},
   setCurrentProduce: () => {},
   setBalancingData: () => {},
+  setBarrackId: () => {},
 });
 export const DataContextProvider = (props) => {
   const [buildingControls, setBuildingControls] = useState([]);
@@ -25,6 +27,7 @@ export const DataContextProvider = (props) => {
   const [combatUnitData, setCombatUnitData] = useState();
   const [armyData, setArmyData] = useState([]);
   const [balancingData, setBalancingData] = useState({});
+  const [barrackId, setBarrackId] = useState("");
 
   const setSettlementId = (id) => {
     localStorage.setItem("settlementId", id);
@@ -38,11 +41,13 @@ export const DataContextProvider = (props) => {
     inventoryData,
     combatUnitData,
     armyData,
+    barrackId,
     setBuildingControls,
     setBuildingData,
     setInventoryData,
     setSettlementId,
     setArmyData,
+    setBarrackId,
   };
 
   return (

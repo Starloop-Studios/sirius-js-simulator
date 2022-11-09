@@ -20,7 +20,6 @@ const Dashboard = () => {
   const [buildingData, setBuildingData] = useState([]);
   const [queueData, setQueueData] = useState([]);
   const [armyData, setArmyData] = useState([]);
-  const [barrackId, setBarrackId] = useState(null);
 
   const setBalancingDataHandler = async () => {
     const balancingForRetrievalOfLatest = config.balancingForRetrievalOfLatest;
@@ -88,25 +87,7 @@ const Dashboard = () => {
     }
   }, [inventoryData]);
 
-  const getLatestArmy = useCallback(async () => {
-    console.log("getLatestArmy() called .");
-    const armyForRetrieval = config.armyForRetrieval;
-    try {
-      const data = await sendRequest(
-        `${process.env.REACT_APP_HOST_URL}${armyForRetrieval.path}`,
-        armyForRetrieval.method,
-        null,
-        {
-          Authorization: `Bearer ${authCtx.token}`,
-        }
-      );
-      console.log("Army Data recevied.", data);
-      dataCtx.setArmyData(data.content);
-    } catch (error) {
-      toast.error(error.message);
-      console.log(error.message);
-    }
-  }, [armyData]);
+
 
   useEffect(() => {
     setBalancingDataHandler();
@@ -115,17 +96,14 @@ const Dashboard = () => {
 
   return (
     <>
-      <h3>Welcome to Sirirus-Zoolana Simulator</h3>
       {isError && <Toast isError={isError} clearError={clearError} />}
       {isLoading && <Spinner show={isLoading} />}
-      {authCtx.userData && <User />}
       {buildingData && (
         <Building
           buildingData={buildingData}
           setBuildingData={setBuildingData}
           getLatestSettlement={getLatestSettlement}
           getLatestInventory={getLatestInventory}
-          setBarrackId={setBarrackId}
         />
       )}
     </>

@@ -23,7 +23,6 @@ const Building = (props) => {
     setBuildingData,
     getLatestSettlement,
     getLatestInventory,
-    setBarrackId,
   } = props;
   const buildingControls = dataCtx.balancingData.Building;
   const buildingCost = dataCtx.balancingData.BuildingCost;
@@ -67,8 +66,6 @@ const Building = (props) => {
           Authorization: `Bearer ${authCtx.token}`,
         }
       );
-      // const currDate = new Date().toUTCString();
-      // console.log(currDate, "currDate startFun");
       console.log("build Data recevied.", data);
       toast.info(`Building Started For ${id}`);
       await getLatestSettlement();
@@ -95,7 +92,7 @@ const Building = (props) => {
   const collectHandler = async (id, type) => {
     if (type === "barracks") {
       console.log("Enter to the barracks called .");
-      setBarrackId(id);
+      dataCtx.setBarrackId(id);
       navigate(`/barracks/${id}`);
       return;
     }
@@ -165,6 +162,7 @@ const Building = (props) => {
           })}
         </div>
       )}
+
       {buildingData && !buildingData.length && (
         <h5>No Building . Start Building</h5>
       )}

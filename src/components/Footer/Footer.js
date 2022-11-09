@@ -10,10 +10,13 @@ const Footer = (props) => {
   const dataCtx = useContext(DataContext);
   return (
     <div className={Styles.container}>
-      {dataCtx.inventoryData.length > 0 && (
-        <Inventory getLatestInventory={getLatestInventory} />
-      )}
-      {dataCtx.armyData.length > 0 && <Army />}
+      <h4>Inventory & Army</h4>
+      <div className={Styles.main}>
+        {dataCtx.inventoryData.length > 0 && (
+          <Inventory getLatestInventory={getLatestInventory} />
+        )}
+        {dataCtx.armyData.length > 0 && <Army />}
+      </div>
     </div>
   );
 };

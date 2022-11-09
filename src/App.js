@@ -8,6 +8,8 @@ import { Route, Routes, Navigate } from "react-router-dom";
 // import { Toast } from "react-toastify/dist/components";
 import Toast from "./components/UI/Toast";
 import FooterPage from "./pages/FooterPage";
+import Navbar from "./components/Navbar/Navbar";
+import UserPage from "./pages/UserPage";
 function App() {
   const authCtx = useContext(AuthContext);
 
@@ -18,12 +20,28 @@ function App() {
 
   return (
     <div className="App">
+      
+      {authCtx.isLoggedin && <Navbar />}
       <Routes>
         <Route
           path="/"
           element={authCtx.isLoggedin ? <Dashboard /> : <Auth />}
           exact
         />
+        <Route
+          path="/user"
+          element={
+            authCtx.isLoggedin ? <UserPage /> : <Navigate replace to="/" />
+          }
+          exact
+        ></Route>
+        <Route
+          path="/building"
+          element={
+            authCtx.isLoggedin ? <Dashboard /> : <Navigate replace to="/" />
+          }
+          exact
+        ></Route>
         <Route
           path="/barracks/:id"
           element={
