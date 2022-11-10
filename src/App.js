@@ -10,17 +10,11 @@ import Toast from "./components/UI/Toast";
 import FooterPage from "./pages/FooterPage";
 import Navbar from "./components/Navbar/Navbar";
 import UserPage from "./pages/UserPage";
+import User from "./components/User/User";
 function App() {
   const authCtx = useContext(AuthContext);
-
-  // const dataCtx = useContext(DataContext);
-  // useEffect(() => {
-  //   dataCtx.setInitialData(data);
-  // }, []);
-
   return (
     <div className="App">
-      
       {authCtx.isLoggedin && <Navbar />}
       <Routes>
         <Route
@@ -54,7 +48,7 @@ function App() {
       {/* <Toast /> */}
       {/* {!authCtx.isLoggedin && <Auth />}
       {authCtx.isLoggedin && <Dashboard />} */}
-      {/* <Barracks />
+      {/* <Barracks /> */}
       {/* <User/> */}
     </div>
   );
