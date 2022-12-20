@@ -1,0 +1,36 @@
+.container {
+  /* border: 2px solid red; */
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  list-style-type: none;
+  height: 8vh;
+  background-color: rgba(234, 237, 237, 0.539);
+  margin-bottom: 20px;
+}
+.container li a {
+  text-decoration: none;
+  color: black;
+}
+.logo {
+  width: 30%;
+  /* border: 2px solid red; */
+  font-size: 1.5rem;
+}
+.nav {
+  /* border: 2px solid red; */
+  width: 40%;
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 1.2rem;
+  color: black;
+}
+.nav li a {
+  /* border: 2px solid red; */
+
+  padding: 10px;
+  min-width: 200px;
+}
+.container li a:hover {
+  font-weight: bolder;
+}

@@ -26,7 +26,8 @@ const Barracks = (props) => {
   const authCtx = useContext(AuthContext);
   const combatUnitData = dataCtx.balancingData.CombatUnit;
   const unitCost = dataCtx.balancingData.UnitCost;
-  const startProduceHandler = async (produceId) => {
+
+  const startProduceHandler = async (produceId, unitQuanity) => {
     console.log("StartProductionCalled()");
     const productionForCreation = config.productionForCreation;
     const startProdData = {
@@ -35,6 +36,7 @@ const Barracks = (props) => {
       buildingId: barrackId,
       meta: {
         produceId: produceId,
+        expected: unitQuanity,
       },
     };
     try {
@@ -68,8 +70,8 @@ const Barracks = (props) => {
     <div className={Styles.container} id="barracks">
       <Toast isError={isError} clearError={clearError} />
       {isLoading && <Spinner show={isLoading} />}
+      <h4>Barracks</h4>
       <div className={Styles.main}>
-        <h4>Welcome Inside the barracks </h4>
         <div className={Styles.controls}>
           {combatUnitData &&
             combatUnitData.map((ele) => {
@@ -89,9 +91,9 @@ const Barracks = (props) => {
               );
             })}
         </div>
-      </div>
-      <div className={Styles.queue}>
-        <Queue queueData={queueData} />
+        <div className={Styles.queue}>
+          <Queue queueData={queueData} />
+        </div>
       </div>
     </div>
   );

@@ -20,7 +20,6 @@ const Dashboard = () => {
   const [buildingData, setBuildingData] = useState([]);
   const [queueData, setQueueData] = useState([]);
   const [armyData, setArmyData] = useState([]);
-  const [barrackId, setBarrackId] = useState(null);
 
   const setBalancingDataHandler = async () => {
     const balancingForRetrievalOfLatest = config.balancingForRetrievalOfLatest;
@@ -80,94 +79,33 @@ const Dashboard = () => {
         }
       );
       console.log("Inventory Data recevied.", data);
-      setInventoryData(data.content);
+      dataCtx.setInventoryData(data.content);
       // dataCtx.setInventoryData(data.content);
     } catch (error) {
       toast.error(error.message);
       console.log(error.message);
     }
   }, [inventoryData]);
-  const getLatestQueue = useCallback(async () => {
-    try {
-      const data = await sendRequest(
-        `${process.env.REACT_APP_HOST_URL}/api/v1/production?buildingId=${barrackId}`,
-        "GET",
-        null,
-        {
-          Authorization: `Bearer ${authCtx.token}`,
-        }
-      );
-      console.log("Queue Data recevied.", data);
-      setQueueData(data);
-    } catch (error) {
-      toast.error(error.message);
-      console.log(error.message);
-    }
-  }, [barrackId, queueData]);
-  const getLatestArmy = useCallback(async () => {
-    console.log("getLatestArmy() called .");
-    const armyForRetrieval = config.armyForRetrieval;
-    try {
-      const data = await sendRequest(
-        `${process.env.REACT_APP_HOST_URL}${armyForRetrieval.path}`,
-        armyForRetrieval.method,
-        null,
-        {
-          Authorization: `Bearer ${authCtx.token}`,
-        }
-      );
-      console.log("Army Data recevied.", data);
-      setArmyData(data.content);
-    } catch (error) {
-      toast.error(error.message);
-      console.log(error.message);
-    }
-  }, [armyData]);
+
+
 
   useEffect(() => {
     setBalancingDataHandler();
     getLatestSettlement();
-    getLatestInventory();
-    getLatestArmy();
   }, []);
-
-  useEffect(() => {
-    if (barrackId) {
-      getLatestQueue();
-    }
-  }, [barrackId]);
 
   return (
     <>
-      <h3>Welcome to Sirirus-Zoolana Simulator</h3>
       {isError && <Toast isError={isError} clearError={clearError} />}
       {isLoading && <Spinner show={isLoading} />}
-      {authCtx.userData && <User />}
       {buildingData && (
         <Building
           buildingData={buildingData}
           setBuildingData={setBuildingData}
           getLatestSettlement={getLatestSettlement}
           getLatestInventory={getLatestInventory}
-          setBarrackId={setBarrackId}
         />
       )}
-      {barrackId && (
-        <Barracks
-          barrackId={barrackId}
-          getLatestQueue={getLatestQueue}
-          getLatestInventory={getLatestInventory}
-          getLatestArmy={getLatestArmy}
-          queueData={queueData}
-          setQueueData={setQueueData}
-          armyData={armyData}
-        />
-      )}
-      <Footer
-        inventoryData={inventoryData}
-        getLatestInventory={getLatestInventory}
-        armyData={armyData}
-      />
     </>
   );
 };

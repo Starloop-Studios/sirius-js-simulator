@@ -1,5 +1,4 @@
 import React, { createContext, useState } from "react";
-
 const DataContext = createContext({
   buildingControls: [],
   inventoryData: [],
@@ -8,7 +7,8 @@ const DataContext = createContext({
   armyData: [],
   armyQueue: [],
   currProduce: "none",
-  balancingData :{},
+  balancingData: {},
+  barrackId: "",
   setBuildingControls: () => {},
   setInitialData: () => {},
   setBuildingData: () => {},
@@ -17,51 +17,17 @@ const DataContext = createContext({
   setArmyQueue: () => {},
   setArmyData: () => {},
   setCurrentProduce: () => {},
-  setBalancingData:()=>{}
+  setBalancingData: () => {},
+  setBarrackId: () => {},
 });
-
 export const DataContextProvider = (props) => {
-  // const intialToken = localStorage.getItem("token");
-  // const intialStudentId = localStorage.getItem("studentId");
-  //   const [initialData, setInitialData] = useState(null);
   const [buildingControls, setBuildingControls] = useState([]);
   const [buildingData, setBuildingData] = useState();
-  const [inventoryData, setInventoryData] = useState();
+  const [inventoryData, setInventoryData] = useState([]);
   const [combatUnitData, setCombatUnitData] = useState();
-  const [armyData, setArmyData] = useState();
-  const [armyQueue, setArmyQueue] = useState();
-  const [currProduce, setCurrentProduce] = useState("none");
+  const [armyData, setArmyData] = useState([]);
   const [balancingData, setBalancingData] = useState({});
-
-  const setData = (data) => {
-    // setInventoryData(data.contents.InventorySeed);
-    setCombatUnitData(data.contents.CombatUnit);
-    // const array = [];
-    // let counter = 1;
-    // for (var i = 0; i < bData.length; i++) {
-    //   for (var j = 0; j < Number(bData[i].maxQuantity); j++) {
-    //     let data = {
-    //       id: counter++,
-    //       nameId: bData[i].id,
-    //       name: bData[i].name,
-    //       buildTime: Number(bData[i].buildTime),
-    //       isBuilding: false,
-    //       build: false,
-    //       produce: false,
-    //     };
-    //     array.push(data);
-    //   }
-    // }
-    const newArmyData = data.contents.CombatUnit.map((ele) => ({
-      name: ele.name,
-      produceId: ele.id,
-      quantity: 0,
-      balancingContentId: ele.id,
-      produceTime: ele.produceTime,
-    }));
-    setArmyData([]);
-    setBuildingData([]);
-  };
+  const [barrackId, setBarrackId] = useState("");
 
   const setSettlementId = (id) => {
     localStorage.setItem("settlementId", id);
@@ -70,21 +36,18 @@ export const DataContextProvider = (props) => {
   const contextValue = {
     setBalancingData,
     balancingData,
-    setInitialData: setData,
     buildingControls,
     buildingData,
     inventoryData,
     combatUnitData,
     armyData,
-    armyQueue,
-    currProduce,
+    barrackId,
     setBuildingControls,
     setBuildingData,
     setInventoryData,
     setSettlementId,
-    setArmyQueue,
     setArmyData,
-    setCurrentProduce,
+    setBarrackId,
   };
 
   return (

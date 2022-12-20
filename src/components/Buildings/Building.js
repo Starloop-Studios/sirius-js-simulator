@@ -23,7 +23,6 @@ const Building = (props) => {
     setBuildingData,
     getLatestSettlement,
     getLatestInventory,
-    setBarrackId,
   } = props;
   const buildingControls = dataCtx.balancingData.Building;
   const buildingCost = dataCtx.balancingData.BuildingCost;
@@ -57,7 +56,6 @@ const Building = (props) => {
       settlementId,
       balancingContentId: id,
     };
-    console.log(buildingReqData);
     try {
       const data = await sendRequest(
         `${process.env.REACT_APP_HOST_URL}/api/v1/settlement/${settlementId}/buildings`,
@@ -94,8 +92,8 @@ const Building = (props) => {
   const collectHandler = async (id, type) => {
     if (type === "barracks") {
       console.log("Enter to the barracks called .");
-      setBarrackId(id);
-      // navigate("/barracks", { state: { buildingId: id } });
+      dataCtx.setBarrackId(id);
+      navigate(`/barracks/${id}`);
       return;
     }
     const productionForCreation = config.productionForCreation;
@@ -164,6 +162,7 @@ const Building = (props) => {
           })}
         </div>
       )}
+
       {buildingData && !buildingData.length && (
         <h5>No Building . Start Building</h5>
       )}

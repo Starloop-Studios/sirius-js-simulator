@@ -13,6 +13,7 @@ const Queue = (props) => {
           queueData.map((ele, index) => (
             <div key={index}>
               {index + 1}.&nbsp;{ele.meta.produceId}
+              ({ele.meta.collected ? ele.meta.collected : 0}/{ele.meta.expected})
             </div>
           ))}
       </div>
