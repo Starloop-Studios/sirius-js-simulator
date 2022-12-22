@@ -16,7 +16,7 @@ function formBody(details) {
     var encodedValue = encodeURIComponent(details[property]);
     formBody.push(encodedKey + "=" + encodedValue);
   }
-  return (formBody = formBody.join("&"));
+  return formBody.join("&");
 }
 
 const Auth = () => {
@@ -27,18 +27,18 @@ const Auth = () => {
 
   const setIntialToken = async () => {
     console.log("setIntialToken() called !");
-    const tempAppIdKeyForInitialToken = config.tempAppIdKeyForInitialToken;
+    const tempClientIdKeyForInitialToken = config.tempClientIdKeyForInitialToken;
     const authenticateForToken = config.authenticateForToken;
     let data;
     try {
       data = await sendRequest(
         `${process.env.REACT_APP_HOST_URL}${authenticateForToken.path}`,
         authenticateForToken.method,
-        formBody(tempAppIdKeyForInitialToken),
+        formBody(tempClientIdKeyForInitialToken),
         { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" }
       );
       console.log("App authenticate Token received .");
-      return data.accessToken;
+      return data;
     } catch (error) {
       toast.error(error.message);
       console.log(error.message);
@@ -47,13 +47,13 @@ const Auth = () => {
   const signUp = async () => {
     console.log("userCreation() called !");
     const userForCreation = config.userForCreation;
-    const intialToken = await setIntialToken();
+    const {accessToken} = await setIntialToken();
     try {
       let data = await sendRequest(
         `${process.env.REACT_APP_HOST_URL}${userForCreation.path}`,
         userForCreation.method,
         null,
-        { Authorization: `Bearer ${intialToken}` }
+        { Authorization: `Bearer ${accessToken}` }
       );
       console.log(data, "Created User Data.");
       setSiriusId(data.siriusId);

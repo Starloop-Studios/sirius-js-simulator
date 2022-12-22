@@ -11,8 +11,10 @@ const tempAppIdKeyForInitialToken = {
   appKey: "applicationKey",
 };
 
-// const tempClientIdKeyForInitialToken =
-//   '{"appId":"clientId", "appKey": "clientSecret"}';
+const tempClientIdKeyForInitialToken = {
+  "appId": "applicationId", 
+  "appKey": "applicationKey"
+};
 
 const authenticateForToken = { path: "/auth/token", method: "POST" };
 // const authenticateForAuthorize = '{"path":"/auth/authorize", "method":"GET"}';
@@ -53,6 +55,7 @@ const armyForRetrieval = { path: "/api/v1/combatUnits", method: "GET" };
 
 module.exports = {
   tempAppIdKeyForInitialToken,
+  tempClientIdKeyForInitialToken,
   authenticateForToken,
   userForCreation,
   balancingForRetrievalOfLatest,
