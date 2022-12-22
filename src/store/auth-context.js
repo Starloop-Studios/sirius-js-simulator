@@ -1,4 +1,4 @@
-import React, { createContext, useState, useCallback } from "react";
+import React, { createContext, useState, useCallback, useEffect } from "react";
 
 const AuthContext = createContext({
   token: "",
@@ -16,8 +16,6 @@ const AuthContext = createContext({
   setBarrackFlag: () => {},
 });
 export const AuthContextProvider = (props) => {
-  // const intialToken = localStorage.getItem("token");
-  // const intialStudentId = localStorage.getItem("studentId");
   const [token, setToken] = useState(null);
   const [isLoggedin, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState();
@@ -31,38 +29,26 @@ export const AuthContextProvider = (props) => {
     localStorage.setItem("token", token);
   }, []);
 
-  // const logoutHandler = useCallback(() => {
-  //   // console.log("called ")
-  //   setToken(null);
-  //   setStudentId(null);
-  //   setIsLoggedIn(false);
-  //   setExpiration(null);
-  //   localStorage.removeItem("token");
-  //   localStorage.removeItem("studentId");
-  //   localStorage.removeItem("expirationToken");
-  // }, []);
-  // const setData = (subjects) => {
-  //   let revSubjects = subjects.reverse();
-  //   setSubjects(revSubjects);
-  // };
+  const logoutHandler = useCallback(() => {
+    setToken(null);
+    setIsLoggedIn(false);
+    localStorage.removeItem("token");
+  }, []);
 
-  // useEffect(() => {
-  //   const intialToken = localStorage.getItem("token");
-  //   const intialStudentId = localStorage.getItem("studentId");
-  //   const expirationTime = localStorage.getItem("expirationToken");
 
-  //   if (
-  //     intialToken &&
-  //     intialStudentId &&
-  //     new Date(expirationTime) > new Date()
-  //   ) {
-  //     loginHandler(intialToken, intialStudentId, new Date(expirationTime));
-  //   } else {
-  //     logoutHandler();
-  //   }
-
-  //   // eslint-disable-next-line
-  // }, [loginHandler]);
+  useEffect(() => {
+    const intialToken = localStorage.getItem("token");
+    const expirationTime = localStorage.getItem("expirationToken");
+    if (
+      intialToken &&
+      new Date(expirationTime) > new Date()
+    ) {
+      loginHandler(intialToken, new Date(expirationTime));
+    } else {
+      logoutHandler();
+    }
+    // eslint-disable-next-line
+  }, [loginHandler]);
 
   // useEffect(() => {
   //   if (token && expiration) {
@@ -90,10 +76,7 @@ export const AuthContextProvider = (props) => {
     setBarrackFlag,
     barrackFlag,
     login: loginHandler,
-    // // logout: logoutHandler,
-    // setData: setData,
-    // subjects: subjects,
-    // studentId: studentId,
+    logout: logoutHandler,
   };
 
   return (

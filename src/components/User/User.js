@@ -8,12 +8,14 @@ const User = () => {
   const [keyCopy, setKeyCopy] = useState(false);
   const [idCopy, setIdCopy] = useState(false);
   const authCtx = useContext(AuthContext);
-  const userData = authCtx.userData;
-  // const userData = {
-  //   username: "SRS_34262787",
-  //   siriusKey: "4v0jz8b46ie0000000000",
-  //   siriusId: "auiic5aq3m",
-  // };
+  // const userData = authCtx.userData;
+  const userData = {
+    username: "SRS_34262787",
+    siriusKey: "4v0jz8b46ie0000000000",
+    siriusId: "auiic5aq3m",
+    exp: 0,
+    level: 0,
+  };
   return (
     <div className={Styles.container}>
       {!userData && <h5>No User data Found . Try Again .</h5>}
@@ -54,6 +56,16 @@ const User = () => {
             >
               {idCopy ? <MdOutlineDownloadDone /> : <BiCopy />}
             </button>
+          </div>
+          <div className={Styles.content}>
+            <div className={Styles.title}>User Experience</div>
+            <div>:</div>
+            <div className={Styles.main}>{userData.exp}</div>
+          </div>
+          <div className={Styles.content}>
+            <div className={Styles.title}>User Level</div>
+            <div>:</div>
+            <div className={Styles.main}>{userData.level}</div>
           </div>
         </>
       )}
