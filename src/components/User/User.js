@@ -4,17 +4,48 @@ import AuthContext from "../../store/auth-context";
 import Styles from "./User.module.css";
 import { BiCopy } from "react-icons/bi";
 import { MdOutlineDownloadDone } from "react-icons/md";
+import Button from "react-bootstrap/Button";
+import DataContext from "../../store/data-context";
+import useHttp from "../../hooks/use-http";
+import Toast from "../UI/Toast";
+import Spinner from "../UI/Spinner";
+import { toast } from "react-toastify";
+import { async } from "q";
+
 const User = () => {
   const [keyCopy, setKeyCopy] = useState(false);
   const [idCopy, setIdCopy] = useState(false);
   const authCtx = useContext(AuthContext);
-  // const userData = authCtx.userData;
-  const userData = {
-    username: "SRS_34262787",
-    siriusKey: "4v0jz8b46ie0000000000",
-    siriusId: "auiic5aq3m",
-    exp: 0,
-    level: 0,
+  const dataCtx = useContext(DataContext);
+  const { isLoading, isError, sendRequest, clearError } = useHttp();
+  const userData = authCtx.userData;
+  const addExpHandler = async () => {
+    const userId = userData.userId;
+    const quantity = 10;
+    if (!userData) {
+      console.log("No user data found.");
+      return;
+    }
+    console.log(`addExpHandler() called to add ${quantity} exp to ${userId}`);
+    try {
+      const data = await sendRequest(
+        `${process.env.REACT_APP_HOST_URL}/api/v1/playerprofiles/userId/${userId}/xp/increment/${quantity}`,
+        "POST",
+        null,
+        {
+          Authorization: `Bearer ${authCtx.token}`,
+        }
+      );
+      toast.success(`Added ${quantity} exp to user ${userId}.`);
+      console.log(data, `${quantity} exp added to user ${userId}.`);
+      authCtx.setUserData({
+        ...authCtx.userData,
+        exp: data.exp,
+        level: data.level,
+      });
+    } catch (error) {
+      console.log(error, isError);
+    }
   };
   return (
     <div className={Styles.container}>
@@ -61,6 +92,15 @@ const User = () => {
             <div className={Styles.title}>User Experience</div>
             <div>:</div>
             <div className={Styles.main}>{userData.exp}</div>
+            <div className={Styles.itemControl}>
+              <Button
+                onClick={() => {
+                  addExpHandler();
+                }}
+              >
+                +ADD
+              </Button>
+            </div>
           </div>
           <div className={Styles.content}>
             <div className={Styles.title}>User Level</div>
