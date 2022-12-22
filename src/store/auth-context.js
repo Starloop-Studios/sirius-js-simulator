@@ -47,21 +47,7 @@ export const AuthContextProvider = (props) => {
     } else {
       logoutHandler();
     }
-    // eslint-disable-next-line
   }, [loginHandler]);
-
-  // useEffect(() => {
-  //   if (token && expiration) {
-  //     // console.log(expiration.getTime() -new Date().getTime());
-
-  //     timer = setTimeout(
-  //       logoutHandler,
-  //       expiration.getTime() - new Date().getTime()
-  //     );
-  //   } else {
-  //     clearTimeout(timer);
-  //   }
-  // }, [token, expiration, logoutHandler]);
 
   const contextValue = {
     token,
