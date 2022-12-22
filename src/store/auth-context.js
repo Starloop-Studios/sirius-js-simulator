@@ -16,8 +16,6 @@ const AuthContext = createContext({
   setBarrackFlag: () => {},
 });
 export const AuthContextProvider = (props) => {
-  // const intialToken = localStorage.getItem("token");
-  // const intialStudentId = localStorage.getItem("studentId");
   const [token, setToken] = useState(null);
   const [isLoggedin, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState();
@@ -36,22 +34,16 @@ export const AuthContextProvider = (props) => {
     setIsLoggedIn(false);
     localStorage.removeItem("token");
   }, []);
-  // const setData = (subjects) => {
-  //   let revSubjects = subjects.reverse();
-  //   setSubjects(revSubjects);
-  // };
+
 
   useEffect(() => {
     const intialToken = localStorage.getItem("token");
-    const intialStudentId = localStorage.getItem("studentId");
     const expirationTime = localStorage.getItem("expirationToken");
-
     if (
       intialToken &&
-      intialStudentId &&
       new Date(expirationTime) > new Date()
     ) {
-      loginHandler(intialToken, intialStudentId, new Date(expirationTime));
+      loginHandler(intialToken, new Date(expirationTime));
     } else {
       logoutHandler();
     }
@@ -85,9 +77,6 @@ export const AuthContextProvider = (props) => {
     barrackFlag,
     login: loginHandler,
     logout: logoutHandler,
-    // setData: setData,
-    // subjects: subjects,
-    // studentId: studentId,
   };
 
   return (
