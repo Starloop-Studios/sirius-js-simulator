@@ -15,7 +15,7 @@
 .content {
   /* border: 1px solid red; */
   display: grid;
-  grid-template-columns: 3fr 1fr 5fr 1fr;
+  grid-template-columns:  3fr 1fr 5fr 2fr;
   font-weight: 500;
   text-align: left;
 }
@@ -32,4 +32,9 @@
   border: none;
   background-color: transparent;
   color: rgb(128, 123, 123);
+}
+.itemControl {
+  /* border: 2px solid red; */
+  padding: 5px;
+  width: 30%;
 }

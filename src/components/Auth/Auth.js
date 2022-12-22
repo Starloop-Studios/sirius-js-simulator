@@ -27,7 +27,8 @@ const Auth = () => {
 
   const setIntialToken = async () => {
     console.log("setIntialToken() called !");
-    const tempClientIdKeyForInitialToken = config.tempClientIdKeyForInitialToken;
+    const tempClientIdKeyForInitialToken =
+      config.tempClientIdKeyForInitialToken;
     const authenticateForToken = config.authenticateForToken;
     let data;
     try {
@@ -47,7 +48,7 @@ const Auth = () => {
   const signUp = async () => {
     console.log("userCreation() called !");
     const userForCreation = config.userForCreation;
-    const {accessToken} = await setIntialToken();
+    const { accessToken } = await setIntialToken();
     try {
       let data = await sendRequest(
         `${process.env.REACT_APP_HOST_URL}${userForCreation.path}`,
@@ -85,18 +86,13 @@ const Auth = () => {
         null,
         { Authorization: `Bearer ${token}` }
       );
-      console.log(
-        playerData,
-        `${process.env.REACT_APP_HOST_URL}/api/v1/playerprofiles/userId/${data.id}`,
-        "playerData"
-      );
       authCtx.setUserData({
         userId: data.id,
         siriusId: data.siriusId,
         siriusKey: data.siriusKey,
         username: data.username,
-        // exp : playerData.exp,
-        // level : playerData.level
+        exp: playerData.exp,
+        level: playerData.level,
       });
       console.log("Current user data set authctx");
       return data.username;
