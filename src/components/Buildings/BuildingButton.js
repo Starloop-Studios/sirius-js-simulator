@@ -32,9 +32,15 @@ const BuildingButton = (props) => {
   const startTime =
     buildingTime - diff > 2 && diff !== 0 ? diff + 1 : buildingTime;
 
+  const building = dataCtx.balancingData
+  ? dataCtx.balancingData.Building.find(
+    (ele) => ele.id === data.balancingContentId
+  )
+  : {};
+
   const buildingCapacity = dataCtx.balancingData
     ? dataCtx.balancingData.BuildingCapacity.find(
-        (ele) => ele.buildingId === data.balancingContentId && ele.level === 1
+        (ele) => ele.buildingId === data.balancingContentId && ele.level === data.level
       )
     : {};
 
@@ -71,14 +77,16 @@ const BuildingButton = (props) => {
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (data.status === "activated" && produce < buildingCapacity.capacity) {
-        getLatestProduction();
-      }
-    }, buildingCapacity.cycleTime * 1000);
-    return () => {
-      clearInterval(interval);
-    };
+    if (building.type !== 'town') {
+      const interval = setInterval(() => {
+        if (data.status === "activated" && produce < buildingCapacity.capacity) {
+          getLatestProduction();
+        }
+      }, buildingCapacity.cycleTime * 1000);
+      return () => {
+        clearInterval(interval);
+      };
+    }
   }, [data.status, produce]);
 
   return (
