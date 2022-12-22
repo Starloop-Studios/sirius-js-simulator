@@ -79,11 +79,24 @@ const Auth = () => {
         null,
         { Authorization: `Bearer ${token}` }
       );
+      const playerData = await sendRequest(
+        `${process.env.REACT_APP_HOST_URL}/api/v1/playerprofiles/userId/${data.id}`,
+        "GET",
+        null,
+        { Authorization: `Bearer ${token}` }
+      );
+      console.log(
+        playerData,
+        `${process.env.REACT_APP_HOST_URL}/api/v1/playerprofiles/userId/${data.id}`,
+        "playerData"
+      );
       authCtx.setUserData({
         userId: data.id,
         siriusId: data.siriusId,
         siriusKey: data.siriusKey,
         username: data.username,
+        // exp : playerData.exp,
+        // level : playerData.level
       });
       console.log("Current user data set authctx");
       return data.username;
